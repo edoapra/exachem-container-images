@@ -211,7 +211,6 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 &&              git clone -b ${TAMM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git CoupledCluster    \
 &&              git clone --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
-&&              git reset --hard 2033f021e0ff20c983a7ba2e9bd7e7cb2441bec6  \
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/CC -DMODULES=CC "  \
 && 	     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3"  \
@@ -228,7 +227,6 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
               make install  
  	     echo exit code for TAMM make install $?  
               cd /opt/CoupledCluster  
-              git reset --hard eb5181c6fd8aa046388d82e01ee485d92ab78fa9  
  	     mkdir build && cd build  
  	     echo ' === ls -l /opt/install/CC ===' $(ls -l /opt/install/CC)  
  	     echo ' === ls -l /opt/install/CC/lib ===' $(ls -l /opt/install/CC/lib)  
@@ -310,3 +308,6 @@ export COMEX_MAX_NB_OUTSTANDING=12
 export SINGULARITY_COMEX_MAX_NB_OUTSTANDING=12
 #%runscript
 #exec /bin/bash "$@"
+
+#&&              git reset --hard 2033f021e0ff20c983a7ba2e9bd7e7cb2441bec6  \
+#              git reset --hard eb5181c6fd8aa046388d82e01ee485d92ab78fa9  
