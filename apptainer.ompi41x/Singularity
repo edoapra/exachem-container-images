@@ -127,19 +127,13 @@ cd / \
 && export k4=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 4)\
 &&  export ktag=$k1.$k2.$k3-$k4-generic \
 && echo ktag is $ktag \
-&& ls /lib/modules/$ktag  || true
- echo 'FC -v ' `$FC -v` 
- echo 'CC -v ' `$CC -v` 
- echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; }
- apt-get clean 
- echo TTTTT 
- df -h 
- echo TTTTT 
- echo "PATH" $PATH 
- echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH 
- echo FFFFF 
- echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true 
- bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
+&& ls /lib/modules/$ktag  || true \
+&& echo 'FC -v ' `$FC -v`  \
+&& echo 'CC -v ' `$CC -v`  \
+&& echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
+&& apt-get clean  \
+&& echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true  \
+&& bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
 $FC -v \
 && wget --progress=dot:giga https://github.com/openucx/xpmem/archive/refs/tags/v$xpmem.tar.gz -O - |tar xzf - \
 && cd xpmem-$xpmem \
