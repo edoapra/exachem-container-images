@@ -222,26 +222,26 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 && 	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
 &&             make -j3 || { echo "Compilation failure"; 
 	    cat /opt/TAMM/build/TAMM_External-prefix/src/TAMM_External-build/GlobalArrays_External-prefix/src/GlobalArrays_External-build/CMakeFiles/CMakeOutput.log || true ; \
-            cat /opt/TAMM/build/TAMM_External-prefix/src/TAMM_External-build/GlobalArrays_External-prefix/src/GlobalArrays_External-build/CMakeFiles/CMakeError.log || true; exit 1; } 
- 	     echo exit code for TAMM compilation $?  
-              make install  
- 	     echo exit code for TAMM make install $?  
-              cd /opt/CoupledCluster  
- 	     mkdir build && cd build  
- 	     echo ' === ls -l /opt/install/CC ===' $(ls -l /opt/install/CC)  
- 	     echo ' === ls -l /opt/install/CC/lib ===' $(ls -l /opt/install/CC/lib)  
-	     if [ -f /opt/install/CC/lib/libint2.a ]; then echo 'found libint cache' ; \
+            cat /opt/TAMM/build/TAMM_External-prefix/src/TAMM_External-build/GlobalArrays_External-prefix/src/GlobalArrays_External-build/CMakeFiles/CMakeError.log || true; exit 1; } \
+&& 	     echo exit code for TAMM compilation $?   \
+&&              make install   \
+&& 	     echo exit code for TAMM make install $?   \
+&&              cd /opt/CoupledCluster   \
+&& 	     mkdir build && cd build   \
+&& 	     echo ' === ls -l /opt/install/CC ===' $(ls -l /opt/install/CC)   \
+&& 	     echo ' === ls -l /opt/install/CC/lib ===' $(ls -l /opt/install/CC/lib)   \
+&&	     if [ -f /opt/install/CC/lib/libint2.a ]; then echo 'found libint cache' ; \
              mkdir -p /opt/CoupledCluster/build/stage/opt || true ; \
-	     rsync -av /opt/install /opt/CoupledCluster/build/stage/opt/. ; fi 
-             export CMAKE_OPTIONS 
-	     echo CMAKE_OPTIONS $CMAKE_OPTIONS 
-	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; } 
-             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; } 
-	     echo exit code for compilation $? 
-             make install 
-	     echo exit code for make install $? 
-	     bash -c "if [[ -f /opt/install/CC/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi" 
-	     echo git describe --always `git describe --always`  >> /opt/install/info.txt \
+	     rsync -av /opt/install /opt/CoupledCluster/build/stage/opt/. ; fi \
+&&             export CMAKE_OPTIONS  \
+&&	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
+&&	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; }  \
+&&	     echo exit code for compilation $?  \
+&&             make install  \
+&&	     echo exit code for make install $?  \
+&&	     bash -c "if [[ -f /opt/install/CC/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi"  \
+&&	     echo git describe --always `git describe --always`  >> /opt/install/info.txt \
 	    && echo git rev-parse HEAD git `git rev-parse HEAD` >> /opt/install/info.txt \
             && echo 'clean unnecessary source to reduce docker size' \
             && cd /opt && rm  -rf CoupledCluster \
