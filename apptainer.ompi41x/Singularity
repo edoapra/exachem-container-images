@@ -71,11 +71,19 @@ echo ARMCI_NETWORK is $ARMCI_NETWORK
 echo MPI_IMPL is $MPI_IMPL
 echo TAMM_BRANCH is $TAMM_BRANCH
  if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
+<<<<<<< HEAD
  else export FC=gfortran ; export CC=gcc; export CXX=g++; fi \
 && echo 'FC is' "$FC"  \
 && echo ' CC is ' "$CC" \
 && echo ' CXX is ' "$CXX" \
 && cd / \
+=======
+ else export FC=gfortran ; export CC=gcc; export CXX=g++; fi
+ echo 'FC is' "$FC" 
+ echo ' CC is ' "$CC" 
+ echo ' CXX is ' "$CXX" 
+cd / \
+>>>>>>> upstream/main
 && pwd \
 && apt-get -y update \
 && apt-get -y install -y tzdata git moreutils  wget rsync  sudo ca-certificates \
@@ -127,6 +135,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && export k4=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 4)\
 &&  export ktag=$k1.$k2.$k3-$k4-generic \
 && echo ktag is $ktag \
+<<<<<<< HEAD
 && ls /lib/modules/$ktag  || true \
 && echo 'FC -v ' `$FC -v`  \
 && echo 'CC -v ' `$CC -v`  \
@@ -134,6 +143,21 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get clean  \
 && echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true  \
 && bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
+=======
+&& ls /lib/modules/$ktag  || true
+ echo 'FC -v ' `$FC -v` 
+ echo 'CC -v ' `$CC -v` 
+ echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; }
+ apt-get clean 
+ echo TTTTT 
+ df -h 
+ echo TTTTT 
+ echo "PATH" $PATH 
+ echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH 
+ echo FFFFF 
+ echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true 
+ bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
+>>>>>>> upstream/main
 $FC -v \
 && wget --progress=dot:giga https://github.com/openucx/xpmem/archive/refs/tags/v$xpmem.tar.gz -O - |tar xzf - \
 && cd xpmem-$xpmem \
@@ -303,5 +327,3 @@ export SINGULARITY_COMEX_MAX_NB_OUTSTANDING=12
 #%runscript
 #exec /bin/bash "$@"
 
-#&&              git reset --hard 2033f021e0ff20c983a7ba2e9bd7e7cb2441bec6  \
-#              git reset --hard eb5181c6fd8aa046388d82e01ee485d92ab78fa9  
