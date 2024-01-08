@@ -162,7 +162,7 @@ jobs:
         ldd `which mpirun`
         apptainer exec ${{ env.tag }}:latest ldd /opt/install/CC/bin/ExaChem
     - name: test image with apptainer
-      if: ${{ env.push_truefalse == 'true' }} && ${{ matrix.gpu == 'cpu' }}
+      if: ${{ (env.push_truefalse == 'true') && (matrix.gpu == 'cpu') }}
       run: |
         pwd
         ls -la
