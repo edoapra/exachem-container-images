@@ -34,7 +34,9 @@ jobs:
       id: get-simd
       run: |
         /usr/bin/lscpu
-        echo "simd=$(./travis/guess_simd.sh)" >> $GITHUB_ENV
+        curl -LJO https://raw.githubusercontent.com/nwchemgit/nwchem/master/travis/guess_simd.sh
+        chmod +x guess_simd.sh
+        echo "simd=$(./guess_simd.sh)" >> $GITHUB_ENV
     - name: exachem version tag
       run: |
         if [[ ${{ matrix.branch }} !=  main ]]; then
@@ -161,7 +163,7 @@ jobs:
         which mpirun
         ldd `which mpirun`
         apptainer exec ${{ env.tag }}:latest ldd /opt/install/CC/bin/ExaChem
-    - name: test image with apptainer
+    - name: test cpu image with apptainer
       if: ${{ (env.push_truefalse == 'true') && (matrix.gpu == 'cpu') }}
       run: |
         pwd
@@ -172,6 +174,8 @@ jobs:
         sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev
         which mpirun
         ldd `which mpirun`
-        mpirun -np 2 apptainer exec ${{ env.tag }}:latest \
+        APPTAINERENV_OMPI_MCA_btl_vader_single_copy_mechanism=none \
+        OMPI_MCA_btl_vader_single_copy_mechanism=none \
+        mpirun -np 2 apptainer exec ${{ env.tag }}:${{ env.date }} \
         /opt/install/CC/bin/ExaChem \
         inputs/waterdft.json
