@@ -257,9 +257,11 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 	    lib32gcc-11-dev  libc6-dev-i386 libx32gcc-11-dev libc6-dev-x32 lib32gcc-11-dev  \
 	    lib32asan6 lib32atomic1 lib32gcc-s1 lib32gomp1 lib32itm1 lib32quadmath0 lib32stdc++6 lib32ubsan1 libc6-i386 \
 	    libc6-x32 libx32asan6 libx32atomic1 libx32gcc-s1 libx32gomp1 libx32itm1 libx32quadmath0 libx32stdc++6 libx32ubsan1 \
-	    javascript-common less liberror-perl libjs-jquery libjs-sphinxdoc libjs-underscore libltdl-dev libltdl7 libpython3.10 linux-headers-* ; \
-	    apt-get install -y hip-runtime-amd rocblas openmp-extras-runtime;fi  \
-	    && rm -rf "$ROCM_PATH"/bin  "$ROCM_PATH"/llvm/bin  \
+	    javascript-common less liberror-perl libjs-jquery libjs-sphinxdoc libjs-underscore libltdl-dev libltdl7 libpython3.10 linux-headers-generic ; \
+	    apt-get install -y hip-runtime-amd rocblas openmp-extras-runtime;  \
+	    cd /opt/rocm-$ROCM_PATH/lib/rocblas/ ; mkdir keep ; mv library/*"$GPU_ARCH"* keep/.  ; \
+	    rm -rf library ; mv keep library ; \
+	    rm -rf "$ROCM_PATH"/bin  "$ROCM_PATH"/llvm/bin  ; fi\
 	    && echo '*** ls -l CC/bin **' \
 	    && ls -l /opt/install/CC/bin/ || true \
 	    && echo '*** ldd ***'  \
