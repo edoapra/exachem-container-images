@@ -116,9 +116,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${ROCM_VERSION} jammy main' | tee --append /etc/apt/sources.list.d/rocm.list \
 && echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' |  tee /etc/apt/preferences.d/rocm-pin-600 \
 && apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras \
-&& ls -lrt /opt \
-&& ls -lrt  /opt/rocm* || true \
-&& wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt ; fi "  \
+&& ls -lrt  /opt/rocm* || true  ; fi "  \
 && export kernelv=$(dpkg-query -W linux-headers-generic|cut -f2 ) \
 && echo kernelv is $kernelv \
 && export k1=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 1)\
@@ -249,7 +247,7 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 	    && echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
 	    && echo en_US.UTF-8 >> /etc/locale.nopurge \
 	    && localepurge \
-	    && rm -rf /usr/share/doc \
+	    && rm -rf /usr/share/doc /usr/src \
             &&  apt-get -q=2 -y purge   patch curl  wget  make git cpp-"$GCC_VERSION" gfortran-"$GCC_VERSION" gcc-"$GCC_VERSION" libicu-dev libpython"$PY_VERSION"-dev libstdc++-"$GCC_VERSION"-dev libc6-dev libgcc-"$GCC_VERSION"-dev libgfortran-"$GCC_VERSION"-dev  || true \
             && apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean \
 	    && if [ "$GPU" = nvidia ]; then apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" ; fi\
@@ -257,7 +255,7 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 	    lib32gcc-11-dev  libc6-dev-i386 libx32gcc-11-dev libc6-dev-x32 lib32gcc-11-dev  \
 	    lib32asan6 lib32atomic1 lib32gcc-s1 lib32gomp1 lib32itm1 lib32quadmath0 lib32stdc++6 lib32ubsan1 libc6-i386 \
 	    libc6-x32 libx32asan6 libx32atomic1 libx32gcc-s1 libx32gomp1 libx32itm1 libx32quadmath0 libx32stdc++6 libx32ubsan1 \
-	    javascript-common less liberror-perl libjs-jquery libjs-sphinxdoc libjs-underscore libltdl-dev libltdl7 libpython3.10 linux-headers-generic ; \
+	    javascript-common less liberror-perl libjs-jquery libjs-sphinxdoc libjs-underscore libltdl-dev libltdl7 libpython3.10 linux-headers-generic libicu70 ; \
 	    apt-get install -y hip-runtime-amd rocblas openmp-extras-runtime;  \
 	    cd $ROCM_PATH/lib/rocblas/ ; mkdir keep ; mv library/*"$GPU_ARCH"* keep/.  ; \
 	    rm -rf library ; mv keep library ; \
@@ -283,9 +281,6 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 && ls -lart  /opt/install/CC/include || true \
 && ls -lart  /opt/install/CC || true 
 
-#&&  apt-get  -y purge cmake git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
-#&& apt-get -y install libgcc-s1 libgfortran5 \
-#&& apt-get -y autoremove && apt-get clean
 
 
 
