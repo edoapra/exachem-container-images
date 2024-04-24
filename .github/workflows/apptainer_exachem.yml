@@ -46,9 +46,7 @@ jobs:
         else
           myversion=""
         fi
-        if [[ ${{ matrix.gpu }} !=  nvidia_70 ]]; then
-          myversion+=.${{ matrix.gpu }}
-        fi
+        myversion+=.cuda12-${{ matrix.gpu }}
         echo "exachemversion=$myversion" >> $GITHUB_ENV
         if [[ ${{ matrix.armci_network }} !=  MPI-PR ]]; then
           net_tag=$(echo ${{ matrix.armci_network }} | tr '[:upper:]' '[:lower:]')
