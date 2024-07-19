@@ -132,13 +132,15 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
 && apt-get clean  \
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
+&& if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
+&& echo FC is $FC \
+&& echo mpich_options is $mpich_options \
 && bash -o pipefail -c "if [[ ! -f /opt/mpich/lib/libmpi.a ]]; then  \
 $FC -v \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-'$MPICH'.tar.gz  -O - | tar xzf -   \
-&& if [ $FC = 'gfortran' ]; then
-    export mpich_options='  FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch  '
-fi \
 && cd $mpich_prefix                                                        && \
+&& wget --progress=dot:giga https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
+&&  patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
 ./configure  --prefix=$MPICH_DIR   \
 $mpich_options \
 --with-device=ch4:ofi  \
