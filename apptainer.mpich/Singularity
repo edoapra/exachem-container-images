@@ -139,9 +139,9 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 $FC -v \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-'$MPICH'.tar.gz  -O - | tar xzf -   \
 && cd $mpich_prefix     \
-&& mv configure configure.org \
+&& mv autogen.sh autogen.sh.org \
 && wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autogen.sh \
-&& chmod +x configure \
+&& chmod +x autogen.sh \
 && wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/install-autotools.sh \
 && chmod +x install-autotools.sh \
 && wget https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
