@@ -18,7 +18,8 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     bash -c "if [[ -z '${ARMCI_NETWORK}' ]]; then echo 'ARMCI_NETWORK=MPI-PR ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; else echo 'ARMCI_NETWORK is ${ARMCI_NETWORK}'; echo 'ARMCI_NETWORK=${ARMCI_NETWORK} ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; fi"
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/branch.txt ; fi"
-#    bash -c "if [[ -z '${MYUSERNAME}' ]]; then echo 'MYUSERNAME=edoapra ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; else echo 'MYUSERNAME is ${MYUSERNAME}'; echo 'MYUSERNAME=${MYUSERNAME} ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; fi"
+&&     bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/MPICH.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"\
+ fi"
     ls -lrt ${CACHEDIR} || true
     ls -la  ${CACHEDIR}/ || true
     ls -la  ${CACHEDIR}/mpich || true
@@ -35,8 +36,9 @@ echo "$(readlink /proc/$$/exe) is the shell in use"
 #
 #https://sylabs.io/guides/3.6/user-guide/mpi.html
 export DEBIAN_FRONTEND=noninteractive
-export mpich=3.4.2
-export mpich_prefix=mpich-$mpich
+export `cat ./mpich.txt`
+export mpich_prefix=mpich-$MPICH
+echo mpich_prefix is $mpich_prefix 
 export MPICH_DIR=/opt/mpich
 export SINGULARITY_mpich=$mpich
 export SINGULARITY_mpich_prefix=mpich-$mpich
@@ -80,6 +82,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'FC is' "$FC"  \
 && echo ' CC is ' "$CC" \
 && echo ' CXX is ' "$CXX" \
+&& echo MPICH is $MPICH \
 && cd / \
 && pwd \
 && apt-get -y update \
