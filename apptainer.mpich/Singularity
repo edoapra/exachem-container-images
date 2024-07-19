@@ -141,7 +141,7 @@ $FC -v \
 && cd $mpich_prefix                                                        \
 && wget --progress=dot:giga https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
 &&  patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
-./configure  --prefix=$MPICH_DIR   \
+&& ./configure  --prefix=$MPICH_DIR   \
 $mpich_options \
 --with-device=ch4:ofi  \
 --enable-fortran=all \
