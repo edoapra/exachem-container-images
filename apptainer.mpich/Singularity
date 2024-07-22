@@ -103,13 +103,15 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ ${UBUNTU_CODE} main' |  tee /etc/apt/sources.list.d/kitware.list >/dev/null &&  apt-get update \
 && apt-get -y install -y coreutils  tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
  g++ gfortran   make ssh patch   unzip perl-base file \
- python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ python3 python3-dev   unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
  libhwloc-dev   \
  pkg-config gawk  software-properties-common  \
+&& wget https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-x86_64.sh && sh cmake-3.30.1-linux-x86_64.sh  --skip-license \
+&& cmake --version \
 && add-apt-repository -y ppa:ubuntu-toolchain-r/test && apt-get update \
-            && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make ssh patch curl rsync wget git file  bzip2 tar gnupg2 cmake \
+            && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make ssh patch curl rsync wget git file  bzip2 tar gnupg2  \
 && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
 && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
 && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
@@ -236,7 +238,7 @@ $FC -v \
             &&  apt-get -q=2 -y purge   patch curl  wget  make git cpp-"$GCC_VERSION" gfortran-"$GCC_VERSION" gcc-"$GCC_VERSION" libicu-dev libpython"$PY_VERSION"-dev libstdc++-"$GCC_VERSION"-dev libc6-dev libgcc-"$GCC_VERSION"-dev libgfortran-"$GCC_VERSION"-dev  || true \
             && apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean \
 	    && if [ "$GPU" = nvidia ]; then apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" ; fi\
-	    && if [ "$GPU" = "amd" ]; then  apt-get  purge -y  cmake git-man openmp-extras \
+	    && if [ "$GPU" = "amd" ]; then  apt-get  purge -y   git-man openmp-extras \
 	    lib32gcc-11-dev  libc6-dev-i386 libx32gcc-11-dev libc6-dev-x32 lib32gcc-11-dev  \
 	    lib32asan6 lib32atomic1 lib32gcc-s1 lib32gomp1 lib32itm1 lib32quadmath0 lib32stdc++6 lib32ubsan1 libc6-i386 \
 	    libc6-x32 libx32asan6 libx32atomic1 libx32gcc-s1 libx32gomp1 libx32itm1 libx32quadmath0 libx32stdc++6 libx32ubsan1 \
@@ -266,7 +268,7 @@ $FC -v \
 && ls -lart  /opt/install/exachem/include || true \
 && ls -lart  /opt/install/exachem || true 
 
-#&&  apt-get  -y purge cmake git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
+#&&  apt-get  -y purge  git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
 #&& apt-get -y install libgcc-s1 libgfortran5 \
 #&& apt-get -y autoremove && apt-get clean
 
