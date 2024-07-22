@@ -45,7 +45,6 @@ jobs:
         if [[ ${{ matrix.armci_network }} !=  MPI-PR ]]; then
           net_tag=$(echo ${{ matrix.armci_network }} | tr '[:upper:]' '[:lower:]')
           myversion+=.${net_tag}
-#          echo "armci_network="${net_tag}"." >> $GITHUB_ENV
         fi
         echo "exachemversion=$myversion" >> $GITHUB_ENV
     - name: tag
