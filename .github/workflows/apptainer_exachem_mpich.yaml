@@ -49,7 +49,7 @@ jobs:
         echo "exachemversion=$myversion" >> $GITHUB_ENV
     - name: tag
       run: |
-        echo "tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}}" >> $GITHUB_ENV
+        echo "tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}" >> $GITHUB_ENV
     - name: echo-tag
       run: |
         echo ' the apptainer tag is ' '${{ env.tag }}'
