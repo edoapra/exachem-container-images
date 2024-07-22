@@ -93,7 +93,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo        "cacert=/etc/ssl/certs/ca-certificates.crt" >> ~/.curlrc \
 && export CMAKE_VER=3.29.5 \
 && curl -LJO https://github.com/Kitware/CMake/releases/download/v"$CMAKE_VER"/cmake-"$CMAKE_VER"-linux-x86_64.tar.gz && tar xzf cmake-"$CMAKE_VER"-linux-x86_64.tar.gz \
-&& export PATH=/cmake-"$CMAKE_VER"-linux-x86_64/bin:$PATH
+&& export PATH=/cmake-"$CMAKE_VER"-linux-x86_64/bin:$PATH \
 && cmake --version \
 && pwd \
 && echo '@@ ls -lart ' \
