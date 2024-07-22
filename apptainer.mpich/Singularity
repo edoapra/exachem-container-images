@@ -100,7 +100,6 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo " ==========" \
 && pwd \
 && echo pwd $(pwd) \
-&& echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ ${UBUNTU_CODE} main' |  tee /etc/apt/sources.list.d/kitware.list >/dev/null &&  apt-get update \
 && apt-get -y install -y coreutils  tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
  g++ gfortran   make ssh patch   unzip perl-base file \
  python3 python3-dev   unzip zip perl automake libtool autoconf flex  \
