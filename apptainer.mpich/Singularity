@@ -288,7 +288,7 @@ if [ -f /rocm_version.txt ]; then echo 'found rocm_version.txt' ; export `cat /r
 export PATH=/opt/rocm/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:$ROCM_PATH/lib:$LD_LIBRARY_PATH: ; fi
+export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:$ROCM_PATH/lib:$LD_LIBRARY_PATH
 
 export PATH=/opt/install/exachem/bin:$MPICH_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$MPICH_DIR/lib:/usr/local/lib:$LD_LIBRARY_PATHs
