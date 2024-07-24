@@ -284,7 +284,7 @@ export MPICH_DIR=/opt/mpich
 export SINGULARITY_MPICH_DIR=$MPICH_DIR
 export CUDA_VERSION_MAJOR=11 
 export CUDA_VERSION_MINOR=7
-if [ -f /rocm_version.txt ]; then echo 'found rocm_version.txt' ; export `cat /rocm_version.txt` ; fi
+if [ -f /rocm_version.txt ]; then  export `cat /rocm_version.txt` ; fi
 export PATH=/opt/rocm/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:$PATH
