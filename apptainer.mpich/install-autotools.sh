@@ -131,7 +131,7 @@ FILE=${TDIR}.tar.gz
 BIN=${TOP}/bin/${TOOL}
 URL=http://ftp.gnu.org/gnu/${TOOL}/${FILE}
 if [ "x$FTP_OK" = "xno" ] ; then
-    URL=https://github.com/GlobalArrays/autotools/blob/master/${FILE}?raw=true
+    URL=https://github.com/edoapra/exachem-container-images/blob/main/apptainer.mpich/${FILE}?raw=true
 fi
 if [ ! -f ${FILE} ] ; then
     ${download} ${FILE} ${URL}
@@ -186,7 +186,7 @@ FILE=${TDIR}.tar.gz
 BIN=${TOP}/bin/${TOOL}
 URL=http://ftp.gnu.org/gnu/${TOOL}/${FILE}
 if [ "x$FTP_OK" = "xno" ] ; then
-    URL=https://github.com/GlobalArrays/autotools/blob/master/${FILE}?raw=true
+    URL=https://github.com/edoapra/exachem-container-images/blob/main/apptainer.mpich/${FILE}?raw=true
 fi
 if [ ! -f ${FILE} ] ; then
     ${download} ${FILE} ${URL}
@@ -229,7 +229,7 @@ FILE=${TDIR}.tar.gz
 BIN=${TOP}/bin/${TOOL}
 URL=http://ftp.gnu.org/gnu/${TOOL}/${FILE}
 if [ "x$FTP_OK" = "xno" ] ; then
-    URL=https://github.com/GlobalArrays/autotools/blob/master/${FILE}?raw=true
+    URL=https://github.com/edoapra/exachem-container-images/blob/main/apptainer.mpich/${FILE}?raw=true
 fi
 if [ ! -f ${FILE} ] ; then
     ${download} ${FILE} ${URL}
