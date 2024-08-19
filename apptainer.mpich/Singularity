@@ -190,6 +190,8 @@ $FC -v \
 &&              git clone --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
 &&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/rocm_8gpu.patch \
+&&           cat rocm_8gpu.patch \
+&&           grep m_call src/tamm/gpu_streams.hpp \
 &&           patch -p1 < rocm_8gpu.patch \ 
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC;DFT' "  \
