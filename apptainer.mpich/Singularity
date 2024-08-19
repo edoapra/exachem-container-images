@@ -189,8 +189,8 @@ $FC -v \
 &&              git clone -b ${TAMM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem    \
 &&              git clone --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
-&&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/rocm_8gpu.patch
-&&           patch -p1 < rocm_8gpu.patch
+&&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/rocm_8gpu.patch \
+&&           patch -p1 < rocm_8gpu.patch \ 
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC;DFT' "  \
 && 	     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3"  \
