@@ -1,0 +1,14 @@
+diff --git a/src/tamm/gpu_streams.hpp b/src/tamm/gpu_streams.hpp
+index e1ecb511..483264f4 100644
+--- a/src/tamm/gpu_streams.hpp
++++ b/src/tamm/gpu_streams.hpp
+@@ -128,7 +128,8 @@ static inline void getHardwareGPUCount(int* gpus_per_node) {
+ #if defined(USE_CUDA)
+   m_call = "nvidia-smi --query-gpu=name --format=csv,noheader | wc -l";
+ #elif defined(USE_HIP)
+-  m_call = "rocm-smi --alldevices | grep \"AMD INSTINCT\" | wc -l";
++  //  m_call = "rocm-smi --alldevices | grep \"AMD INSTINCT\" | wc -l";
++  m_call = 8;
+ #elif defined(USE_DPCPP)
+   sycl::platform pltf = sycl_get_device(0)->get_platform();
+   if(pltf.get_backend() == sycl::backend::ext_oneapi_level_zero ||
