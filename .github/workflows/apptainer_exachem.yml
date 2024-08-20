@@ -136,9 +136,13 @@ jobs:
         apptainer version
     - name: create sif from docker
       run: |
-        if [[ ! -f ~/cache/ubuntu_jammy.sif ]]; then \                                                                                                  cd ${{ matrix.folder }} ;\
-            apptainer pull docker://ubuntu:jammy ; \
+        if [  -f ~/cache/ubuntu_jammy.sif ]; then \                                                                                                    echo sif found
+           cp ~/cache/ubuntu_jammy.sif ${{ matrix.folder }}/.
+        else
+           cd ${{ matrix.folder }} ;\
+        apptainer pull docker://ubuntu:jammy ; \
         fi
+
     - name: Checkout exachem source
       uses: actions/checkout@v4
       with:
