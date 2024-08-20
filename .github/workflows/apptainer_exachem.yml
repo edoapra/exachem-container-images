@@ -125,6 +125,7 @@ jobs:
         if [[ -f ~/cache/libint.tar.bz2 ]]; then \
         echo "libint cache present" ; \
         fi
+        if [[ -f ~/cache/ubuntu_jammy.sif ]]; then \                                                                                                 cp ~/cache/ubuntu_jammy.sif ${{ matrix.folder }}/. ; \                                                                                     fi
     - name: Install apptainer
       env:
         APP_VER: 1.2.3
@@ -134,6 +135,11 @@ jobs:
         sudo dpkg -i apptainer_${APP_VER}_amd64.deb
         which apptainer
         apptainer version
+    - name: create sif from docker
+      run: |
+        if [[ ! -f ~/cache/ubuntu_jammy.sif ]]; then \                                                                                                  cd ${{ matrix.folder }} ;\
+            apptainer pull docker://ubuntu:jammy ; \
+        fi
     - name: Checkout exachem source
       uses: actions/checkout@v4
       with:
