@@ -72,7 +72,8 @@ export SINGULARITY_PATH=$PATH
 export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 export `cat ./armci_network.txt`
 export `cat ./mpi_impl.txt`
-export `cat ./branch.txt`
+#disable since it grabs main from env
+#export `cat ./branch.txt`
 echo GPU is $GPU
 echo ROCM_PATH is ${ROCM_PATH}
 echo ARMCI_NETWORK is $ARMCI_NETWORK
