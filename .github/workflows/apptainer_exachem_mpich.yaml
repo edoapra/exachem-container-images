@@ -152,12 +152,15 @@ jobs:
         apptainer exec ${{ matrix.folder }}.simg tar cjf ~/cache/libblis.tar.bz2 \
         /opt/install/exachem/include/blis \
         /opt/install/exachem/include/blis.h \
+        /opt/install/exachem/include/scalapackpp \
         /opt/install/exachem/lib/libblis.a \
         /opt/install/exachem/lib/liblapack.a \
         /opt/install/exachem/lib/libscalapack.a \
         /opt/install/exachem/lib/liblapackpp.a \
+        /opt/install/exachem/lib/libscalapackpp.a \
         /opt/install/exachem/lib/pkgconfig/scalapack.pc  \
         /opt/install/exachem/lib/cmake/scalapack-2.2.1 \
+        /opt/install/exachem/lib/cmake/scalapackpp \
         /opt/install/exachem/share/blis
         cp ubuntu_focal.sif ~/cache/.
         echo "cache stored"
