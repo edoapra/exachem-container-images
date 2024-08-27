@@ -154,7 +154,10 @@ jobs:
         /opt/install/exachem/include/blis.h \
         /opt/install/exachem/lib/libblis.a \
         /opt/install/exachem/lib/liblapack.a \
+        /opt/install/exachem/lib/libscalapack.a \
         /opt/install/exachem/lib/liblapackpp.a \
+        /opt/install/exachem/lib/pkgconfig/scalapack.pc  \
+        /opt/install/exachem/lib/cmake/scalapack-2.2.1 \
         /opt/install/exachem/share/blis
         cp ubuntu_focal.sif ~/cache/.
         echo "cache stored"
