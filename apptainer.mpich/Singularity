@@ -1,5 +1,11 @@
 Bootstrap: localimage
-From: ubuntu_${UBUNTU_VERSION}.sif
+From: ubuntu_{{ UBUNTU_VERSION }}.sif
+Stage: spython-base
+
+%arguments
+   UBUNTU_VERSION=focal
+
+%files
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
