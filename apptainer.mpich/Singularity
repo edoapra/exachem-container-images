@@ -64,6 +64,11 @@ fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
+echo '$$$$$$$$$$$$$$$$$$$$'
+echo ' ls -l  ROCM_PATH/lib' $(ls -l $ROCM_PATH/lib)  
+echo '$$$$$$$$$$$$$$$$$$$$'
+echo ' ls -l  ROCM_PATH/lib/libamdhip64.so*' $(ls -l $ROCM_PATH/lib/libamdhip64.so*)  
+echo '$$$$$$$$$$$$$$$$$$$$'
 echo GPU is $GPU
 export GCC_VERSION=11
 
@@ -135,7 +140,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && if [ $GPU = "amd" ]; then mkdir --parents --mode=0755 /etc/apt/keyrings \
 && wget --quiet https://repo.radeon.com/rocm/rocm.gpg.key -O - |  gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null \
 && echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/'$ROCM_VERSION $UBUNTU_CODE 'main' | tee --append /etc/apt/sources.list.d/rocm.list \
-&& apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib \
+&& apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib hipcc \
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true ; fi\
 && echo 'FC -v ' `$FC -v`  \
