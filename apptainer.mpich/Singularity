@@ -118,7 +118,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo UBUNTU_CODE is $UBUNTU_CODE \
 && export UBUNTU_RELEASE=$(lsb_release -r |cut -d : -f 2 | sed 's/\t//') \
 && echo UBUNTU_RELEASE is $UBUNTU_RELEASE \
-&& add-apt-repository -y ppa:ubuntu-toolchain-r/test && apt-get update \
+&& if [ $UBUNTU_VERSION == focal ]; then add-apt-repository -y ppa:ubuntu-toolchain-r/test && apt-get update ; fi \
             && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make patch curl rsync wget git file  bzip2 tar gnupg2  \
 && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
 && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
@@ -138,7 +138,6 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib \
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true \
-&& wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt ; fi   \
 && echo 'FC -v ' `$FC -v`  \
 && echo 'CC -v ' `$CC -v`  \
 && echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
