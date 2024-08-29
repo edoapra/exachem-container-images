@@ -140,6 +140,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && ls -lrt  /opt/rocm* || true \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo 'dpkg-query -L rocminfo' $(dpkg-query -L rocminfo) \
+&& if [ $UBUNTU_CODE = "jammy" ]; then ln -sf /usr/bin/rocm_agent_enumerator $ROCM_PATH/bin/. ;  ln -sf /usr/bin/rocminfo $ROCM_PATH/bin/. ; fi \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo 'rocminfo' $(/opt/rocm/bin/rocm_agent_enumerator) \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
@@ -150,7 +151,6 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo ' ls -l  ROCM_PATH/lib' $(ls -l $ROCM_PATH/lib)   \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo ' ls -l  ROCM_PATH/lib/libamdhip64.so*' $(ls -l $ROCM_PATH/lib/libamdhip64.so*)   \
-&& exit 123 \
 && echo '$$$$$$$$$$$$$$$$$$$$' ; fi \
 && echo 'FC -v ' `$FC -v`  \
 && echo 'CC -v ' `$CC -v`  \
