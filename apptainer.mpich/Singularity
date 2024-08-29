@@ -1,5 +1,5 @@
 Bootstrap: localimage
-From: ubuntu_focal.sif
+From: ubuntu_${UBUNTU_VERSION}.sif
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
