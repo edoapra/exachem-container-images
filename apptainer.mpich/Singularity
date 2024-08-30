@@ -137,7 +137,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/'$ROCM_VERSION $UBUNTU_CODE 'main' | tee --append /etc/apt/sources.list.d/rocm.list \
 && echo  'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600'  |  tee /etc/apt/preferences.d/rocm-pin-600 \
 && echo '$$$$ cat /etc/apt/preferences.d/rocm-pin-600 ' $(cat /etc/apt/preferences.d/rocm-pin-600) \
-&& apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib rocminfo hipcc \
+&& apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib rocminfo hipcc hipblas-dev\
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
