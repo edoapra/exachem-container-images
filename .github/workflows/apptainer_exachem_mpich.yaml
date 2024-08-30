@@ -24,7 +24,7 @@ jobs:
           mpich:
             - 3.4.2
           ga_runtime:
-            - MPI-2SIDED
+            - MPI_2SIDED
             - MPI_RMA
           gpu:
             - cpu
