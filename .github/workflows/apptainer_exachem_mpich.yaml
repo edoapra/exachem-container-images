@@ -23,8 +23,9 @@ jobs:
             - main
           mpich:
             - 3.4.2
-          armci_network:
-            - MPI-PR
+          ga_runtime:
+            - MPI-2SIDED
+            - MPI_RMA
           gpu:
             - cpu
             - amd_gfx90a_rocm6.2
@@ -48,8 +49,8 @@ jobs:
         if [[ ${{ matrix.gpu }} !=  nvidia_70 ]]; then
           myversion+=.${{ matrix.gpu }}
         fi
-        if [[ ${{ matrix.armci_network }} !=  MPI-PR ]]; then
-          net_tag=$(echo ${{ matrix.armci_network }} | tr '[:upper:]' '[:lower:]')
+        if [[ ${{ matrix.ga_runtime }} !=  MPI_2SIDED ]]; then
+          net_tag=$(echo ${{ matrix.ga_runtime }} | tr '[:upper:]' '[:lower:]')
           myversion+=.${net_tag}
         fi
         if [[ ${{ matrix.ubuntu }} !=  focal ]]; then
@@ -131,7 +132,7 @@ jobs:
     - name: build an apptainer container
       run: |
         cd ${{ matrix.folder }}
-        MYUSERNAME=${{ github.actor}}  EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} ARMCI_NETWORK=${{ matrix.armci_network}}  MPI_IMPL=mpich MPICH=${{ matrix.mpich}}  apptainer build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu}} --fakeroot ${{ matrix.folder }}.simg  Singularity
+        MYUSERNAME=${{ github.actor}}  EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} GA_RUNTIME=${{ matrix.ga_runtime}}  MPI_IMPL=mpich MPICH=${{ matrix.mpich}}  apptainer build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu}} --fakeroot ${{ matrix.folder }}.simg  Singularity
     - name: builddate
       id: build-date
       run: |
