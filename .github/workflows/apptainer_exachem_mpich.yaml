@@ -23,8 +23,9 @@ jobs:
             - main
           mpich:
             - 3.4.2
-          armci_network:
-            - MPI-PR
+          ga_runtime:
+            - MPI-2SIDED
+            - MPI_RMA
           gpu:
             - cpu
             - amd_gfx90a_rocm6.2
