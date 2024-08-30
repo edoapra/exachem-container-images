@@ -46,9 +46,6 @@ jobs:
     - name: exachem version tag
       run: |
         myversion=-${{ matrix.exachem_branch }}
-        if [[ ${{ matrix.gpu }} !=  nvidia_70 ]]; then
-          myversion+=.${{ matrix.gpu }}
-        fi
         if [[ ${{ matrix.ga_runtime }} !=  MPI_2SIDED ]]; then
           net_tag=$(echo ${{ matrix.ga_runtime }} | tr '[:upper:]' '[:lower:]')
           myversion+=.${net_tag}
@@ -127,7 +124,7 @@ jobs:
     - name: build an apptainer container
       run: |
         cd ${{ matrix.folder }}
-        MYUSERNAME=${{ github.actor}}  EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} GA_RUNTIME=${{ matrix.ga_runtime}}  MPI_IMPL=mpich MPICH=${{ matrix.mpich}}  apptainer build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu}} --fakeroot ${{ matrix.folder }}.simg  Singularity
+        MYUSERNAME=${{ github.actor}}  EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} GA_RUNTIME=${{ matrix.ga_runtime}}  MPI_IMPL=mpich MPICH=${{ matrix.mpich}}  apptainer build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu}} --rocm --fakeroot ${{ matrix.folder }}.simg  Singularity
     - name: builddate
       id: build-date
       run: |
