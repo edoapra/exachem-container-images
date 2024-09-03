@@ -115,13 +115,8 @@ jobs:
         apptainer version
     - name: create sif from docker
       run: |
-<<<<<<< HEAD
-        if [  -f ~/cache/ubuntu_focal.sif ]; then echo "sif found" ;
-           cp ~/cache/ubuntu_focal.sif ${{ matrix.folder }}/.
-=======
         if [  -f ~/cache/ubuntu_${{ matrix.ubuntu }}.sif ]; then echo "sif found" ; \
            cp ~/cache/ubuntu_${{ matrix.ubuntu }}.sif ${{ matrix.folder }}/.
->>>>>>> d2cb9c8 (fix)
         else
            cd ${{ matrix.folder }} ;\
         apptainer pull docker://ubuntu:${{ matrix.ubuntu }} ; \
