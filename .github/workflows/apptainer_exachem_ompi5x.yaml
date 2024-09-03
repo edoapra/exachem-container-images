@@ -1,4 +1,4 @@
-name: exachem_apptainer
+name: exachem_apptainer_ompi5x
 
 on:
   schedule:
