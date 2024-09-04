@@ -74,7 +74,7 @@ jobs:
         echo "simd=$(./guess_simd.sh)" >> $GITHUB_ENV
     - name: exachem version tag
       run: |
-        myversion=ompi-${{ matrix.ompi }}
+        myversion=.ompi-${{ matrix.ompi }}
         if [[ ${{ matrix.exachem_branch }} !=  main ]]; then
           myversion=.${{ matrix.exachem_branch }}
         fi
