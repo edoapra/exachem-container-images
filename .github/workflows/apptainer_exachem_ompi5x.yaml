@@ -84,10 +84,10 @@ jobs:
         echo "exachemversion=$myversion" >> $GITHUB_ENV
         if [[ ${{ matrix.ga_runtime }} !=  MPI_PROGRESS_RANK ]]; then
           net_tag=$(echo ${{ matrix.ga_runtime }} | tr '[:upper:]' '[:lower:]')
-          echo "ga_runtime="${net_tag}"." >> $GITHUB_ENV
+          echo "ga_runtime=."${net_tag} >> $GITHUB_ENV
         fi
         if [[ ${{ matrix.elpa }} ==  Y ]]; then
-          echo "elpa="elpa"." >> $GITHUB_ENV
+          echo "elpa=.elpa" >> $GITHUB_ENV
         fi
     - name: tag
       run: |
