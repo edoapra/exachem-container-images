@@ -24,8 +24,8 @@ jobs:
             - main
           exachem_branch:
             - main
-          armci_network:
-            - MPI-PR
+          ga_runtime:
+            - MPI_PROGRESS_RANK
           elpa:
             - N
           gpu:
@@ -41,18 +41,23 @@ jobs:
             - amd_gfx90a_rocm5.7.3
           include:
             - gpu: nvidia_70
-              armci_network: MPI-PR
-              folder: apptainer.ompi41x
+              ga_runtime: MPI_RMA
+              folder: apptainer.ompi5x
+              exachem_branch: main
+              elpa: Y
+            - gpu: nvidia_70
+              ga_runtime: MPI_PROGRESS_RANK
+              folder: apptainer.ompi5x
               exachem_branch: main
               elpa: Y
             - gpu: nvidia_80
-              armci_network: MPI-PR
-              folder: apptainer.ompi41x
+              ga_runtime: MPI_PROGRESS_RANK
+              folder: apptainer.ompi5x
               exachem_branch: main
               elpa: Y
             - gpu: nvidia_90
-              armci_network: MPI-PR
-              folder: apptainer.ompi41x
+              ga_runtime: MPI_PROGRESS_RANK
+              folder: apptainer.ompi5x
               exachem_branch: main
               elpa: Y
     steps:
@@ -74,16 +79,16 @@ jobs:
           myversion+=.${{ matrix.gpu }}
         fi
         echo "exachemversion=$myversion" >> $GITHUB_ENV
-        if [[ ${{ matrix.armci_network }} !=  MPI-PR ]]; then
-          net_tag=$(echo ${{ matrix.armci_network }} | tr '[:upper:]' '[:lower:]')
-          echo "armci_network="${net_tag}"." >> $GITHUB_ENV
+        if [[ ${{ matrix.ga_runtime }} !=  MPI_PROGRESS_RANK ]]; then
+          net_tag=$(echo ${{ matrix.ga_runtime }} | tr '[:upper:]' '[:lower:]')
+          echo "ga_runtime="${net_tag}"." >> $GITHUB_ENV
         fi
         if [[ ${{ matrix.elpa }} ==  Y ]]; then
           echo "elpa="elpa"." >> $GITHUB_ENV
         fi
     - name: tag
       run: |
-        echo "tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}.${{ env.armci_network}}${{ env.elpa}}ompi41x" >> $GITHUB_ENV
+        echo "tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}.${{ env.ga_runtime}}${{ env.elpa}}ompi41x" >> $GITHUB_ENV
     - name: echo-tag
       run: |
         echo ' the apptainer tag is ' '${{ env.tag }}'
@@ -151,7 +156,7 @@ jobs:
     - name: build an apptainer container
       run: |
         cd ${{ matrix.folder }}
-        MYUSERNAME=${{ github.actor}} EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} ARMCI_NETWORK=${{ matrix.armci_network}} ELPA=${{ matrix.elpa}} MPI_IMPL=ompi OMPI=${{ matrix.ompi }}  apptainer build --fakeroot ${{ matrix.folder }}.simg  Singularity
+        MYUSERNAME=${{ github.actor}} EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} GA_RUNTIME=${{ matrix.ga_runtime}} ELPA=${{ matrix.elpa}} MPI_IMPL=ompi OMPI=${{ matrix.ompi }}  apptainer build --fakeroot ${{ matrix.folder }}.simg  Singularity
     - name: builddate
       id: build-date
       run: |
