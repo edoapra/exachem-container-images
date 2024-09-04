@@ -202,7 +202,7 @@ $FC -v \
 && echo 'Cleaning up ucx ..........' \
 && make clean >& makec.log \
 && cd ../.. \
-&& wget --progress=dot:giga https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-$ompi.tar.gz -O - | tar xzf -   && \
+&& wget --progress=dot:giga https://download.open-mpi.org/release/open-mpi/v'$ompi_major'.'$ompi_minor'/openmpi-$ompi.tar.gz -O - | tar xzf -   && \
 ln -sf openmpi-$ompi ompi-$ompi  && \
 cd $ompi_prefix                                                        && \
 echo 'Configuring openmpi ..........' &&\
