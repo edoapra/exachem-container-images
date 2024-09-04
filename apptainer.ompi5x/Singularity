@@ -96,7 +96,7 @@ if [ $ompi_major = '5' ]; then
     export ompi_options=' --with-pmix --with-pmix-libdir=/usr/lib/x86_64-linux-gnu --enable-mca-no-build=coll-han '
 else
     export ompi_options=' --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --without-verbs '
-fi \
+fi 
 echo ompi_options $ompi_options 
 
  if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
