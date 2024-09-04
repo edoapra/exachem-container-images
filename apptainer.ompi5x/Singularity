@@ -220,7 +220,7 @@ echo 'Installing openmpi ..........' &&\
 make -j4 install >& makei.log && tail -50 makei.log               && \
 echo 'Cleaning up openmpi ..........' && \
 make clean >& makec.log                                                   && \
-cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
+cd .. ; rm -rf *tar*gz openmpi-* ucx-$ucx ;fi " \
 && echo ' check ucx' \
 && echo ' /opt/ompi/bin/ucx_info -v ' `/opt/ompi/bin/ucx_info -v|| true` \
 && echo ' ucx Transports' `/opt/ompi/bin/ucx_info  -d |grep Transport |cut -c 19- || true` \
