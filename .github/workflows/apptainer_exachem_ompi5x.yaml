@@ -169,13 +169,18 @@ jobs:
         echo ${{ secrets.GITHUB_TOKEN }} | apptainer remote login -u ${{ github.actor }} --password-stdin oras://ghcr.io
         apptainer remote list
         exit_code=0
-        apptainer push ${{ matrix.folder }}/${{ matrix.folder }}.simg ${{ env.tag }}:${{ env.date }} || exit_code=$?
-        apptainer push ${{ matrix.folder }}/${{ matrix.folder }}.simg ${{ env.tag }}:latest|| exit_code+=$?
+        tries=0 ; until [ "$tries" -ge 3 ] ; do \
+        apptainer push ${{ matrix.folder }}/${{ matrix.folder }}.simg ${{ env.tag }}:${{ env.date }} && break ;\
+        tries=$((tries+1)) ; echo attempt no.  $tries    ; sleep 30 ;  done
+        tries=0 ; until [ "$tries" -ge 3 ] ; do \
+        apptainer push ${{ matrix.folder }}/${{ matrix.folder }}.simg ${{ env.tag }}:latest|| exit_code+=$? && break ;\
+        tries=$((tries+1)) ; echo attempt no.  $tries    ; sleep 30 ;  done
         if [[ $exit_code == 0 ]]; then
         echo "push_truefalse=true" >> $GITHUB_ENV
         else
         echo "push_truefalse=false" >> $GITHUB_ENV
         fi
+      shell: bash
     - name: store cache
       if: ${{ env.push_truefalse == 'true' }}
       run: |
