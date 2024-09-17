@@ -27,7 +27,6 @@ jobs:
             - ch4:ofi
           ga_runtime:
             - MPI_PROGRESS_RANK
-            - MPI_RMA
           gpu:
             - cpu
             - amd_gfx90a_rocm6.2
