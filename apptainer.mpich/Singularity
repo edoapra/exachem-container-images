@@ -177,6 +177,8 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
 && if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
 && echo FC is $FC \
+&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
+$FC -v \
 	 && if [ ${MPICH_DEVICE} != ch4:ofi ]; then echo 'installing ucx' ; \
    export ucx=1.11.0 ; \
    echo 'the ucx version is'  $ucx ; \
@@ -193,12 +195,6 @@ echo TAMM_BRANCH is $TAMM_BRANCH
    export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
      fi \
 && echo mpich_options is $mpich_options \
-&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
-$FC -v \
-   export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
- if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
-   fi  \
-&& cd .. \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf - \
 && cd $mpich_prefix     \
 && if [ $mpich_major = '3' ]; then echo 'mpich 3 autotools ' ; \
