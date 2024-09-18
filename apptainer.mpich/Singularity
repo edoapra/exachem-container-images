@@ -212,9 +212,9 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
  cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch ; cd ../../../../  ; pwd ;\
  sh ./autogen.sh ;\
  fi
-&& echo ' mpich_options is set to' \$mpich_options \
+&& echo ' mpich_options is set to' $mpich_options \
 && ./configure  --prefix=$MPICH_DIR   \
- \$mpich_options \
+ $mpich_options \
 --with-device=$MPICH_DEVICE  \
 --enable-fortran=all \
 --disable-opencl --enable-silent-rules \
