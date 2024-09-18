@@ -44,6 +44,7 @@ jobs:
               gpu: cpu
               exachem_branch: main
               tamm_branch: main
+              folder: apptainer.mpich
     steps:
     - name: Get Instruction
       id: get-simd
