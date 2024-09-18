@@ -191,7 +191,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
    if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
    cd ../.. ;\
    export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
-     fi
+     fi \
 && echo mpich_options is $mpich_options \
 && if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
 $FC -v \
