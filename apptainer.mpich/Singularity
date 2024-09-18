@@ -176,8 +176,9 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get clean  \
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
 && if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
-&& echo FC is $FC \
-&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
+&& echo FC is $FC
+
+if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
 $FC -v \
 	 && if [ ${MPICH_DEVICE} != ch4:ofi ]; then echo 'installing ucx' ; \
    export ucx=1.11.0 ; \
@@ -207,7 +208,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
  patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch ;\
  cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch ; cd ../../../../  ; pwd ;\
  sh ./autogen.sh ;\
- fi
+ fi \
 && echo ' mpich_options is set to' $mpich_options \
 && ./configure  --prefix=$MPICH_DIR   \
  $mpich_options \
@@ -222,8 +223,9 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 && make install                  \
 && if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo mpif90 show is $($MPICH_DIR/bin/mpif90 -show) \
-&& cd .. ; rm -rf *tar*gz mpich-*  ;fi  \
-&& if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
+&& cd .. ; rm -rf *tar*gz mpich-*  ;fi
+
+ if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo '********' \
 && export PATH=$MPICH_DIR/bin:$PATH \
 && export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH \
