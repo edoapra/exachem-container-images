@@ -177,35 +177,41 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
 && if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
 && echo FC is $FC \
-&& echo mpich_options is $mpich_options \
-&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
-$FC -v \
-&& if [[ ${MPICH_DEVICE} != ch4:ofi ]]; then echo 'installing ucx' ; \
+	 && if [ ${MPICH_DEVICE} != ch4:ofi ]; then echo 'installing ucx' ; \
    export ucx=1.11.0 ; \
-   echo 'the ucx version is'  \$ucx ; \
-   wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v\$ucx/ucx-\$ucx.tar.gz ; \
-   tar xzf ucx-\$ucx.tar.gz && rm ucx-\$ucx.tar.gz  ;\
-   cd ucx-\$ucx ; \
+   echo 'the ucx version is'  $ucx ; \
+   wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz ; \
+   tar xzf ucx-$ucx.tar.gz && rm ucx-$ucx.tar.gz  ;\
+   cd ucx-$ucx ; \
    wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch ;\
    patch -p0 < ./ucx_malloc.patch ;\
    mkdir -p build && cd build ;\
-   ../configure --prefix=\$MPICH_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check ;\
+   ../configure --prefix=$MPICH_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check ;\
    make -j4 && make install ;\
+   if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
+   cd ../.. ;\
+   export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
+     fi
+&& echo mpich_options is $mpich_options \
+&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
+$FC -v \
    export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
  if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
    fi  \
 && cd .. \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf - \
 && cd $mpich_prefix     \
-&& mv autogen.sh autogen.sh.org \
-&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autogen.sh \
-&& chmod +x autogen.sh \
-&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/install-autotools.sh \
-&& chmod +x install-autotools.sh \
-&& wget https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
-&& patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
-&& cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch && cd ../../../../  && pwd \
-&& sh ./autogen.sh \
+&& if [ $mpich_major = '3' ]; then echo 'mpich 3 autotools ' ; \
+mv autogen.sh autogen.sh.org ;\
+wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autogen.sh ;\
+ chmod +x autogen.sh ;\
+ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/install-autotools.sh ;\
+ chmod +x install-autotools.sh ;\
+ wget https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch ;\
+ patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch ;\
+ cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch ; cd ../../../../  ; pwd ;\
+ sh ./autogen.sh ;\
+ fi
 && echo ' mpich_options is set to' \$mpich_options \
 && ./configure  --prefix=$MPICH_DIR   \
  \$mpich_options \
