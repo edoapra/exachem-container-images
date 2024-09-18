@@ -193,9 +193,9 @@ $FC -v \
    make -j4 && make install ;\
    if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
    cd ../.. ;\
-   export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
+   export mpich_options=$mpich_options" --with-ucx="$MPICH_DIR ; \
      fi \
-&& echo mpich_options is $mpich_options \
+&& echo ' mpich_options is set to' $mpich_options \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf - \
 && cd $mpich_prefix     \
 && if [ $mpich_major = '3' ]; then echo 'mpich 3 autotools ' ; \
@@ -209,7 +209,6 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
  cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch ; cd ../../../../  ; pwd ;\
  sh ./autogen.sh ;\
  fi \
-&& echo ' mpich_options is set to' $mpich_options \
 && ./configure  --prefix=$MPICH_DIR   \
  $mpich_options \
 --with-device=$MPICH_DEVICE  \
