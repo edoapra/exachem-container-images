@@ -35,8 +35,10 @@ jobs:
             - amd_gfx90a_rocm5.6
           ubuntu:
             - jammy
-          scalapack: y
-          elpa: n
+          scalapack:
+            - y
+          elpa:
+            - n
           include:
             - mpich: 4.2.2
               mpich_device: ch4:ucx
