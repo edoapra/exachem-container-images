@@ -288,6 +288,8 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&             export CMAKE_OPTIONS  \
 &&	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 &&	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullsep09/patches/CMakeLists_elpa.patch \
+&&           patch -p1 < CMakeLists_elpa.patch \
 &&             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; }  \
 &&	     echo exit code for compilation $?  \
 &&             make install  \
