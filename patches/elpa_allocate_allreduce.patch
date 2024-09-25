@@ -1,5 +1,5 @@
 diff --git a/src/elpa2/elpa2_symm_matrix_allreduce_real_template.F90 b/src/elpa2/elpa2_symm_matrix_allreduce_real_template.F90
-index ba8c7496..b390809c 100644
+index ba8c7496..3dc73c5c 100644
 --- a/src/elpa2/elpa2_symm_matrix_allreduce_real_template.F90
 +++ b/src/elpa2/elpa2_symm_matrix_allreduce_real_template.F90
 @@ -51,6 +51,7 @@
@@ -16,7 +16,7 @@ index ba8c7496..b390809c 100644
    integer(kind=MPI_KIND)       :: mpierr
 -  real(kind=REAL_DATATYPE)     :: h1(n*n), h2(n*n)
 +! real(kind=REAL_DATATYPE)     :: h1(n*n), h2(n*n)
-+  real(kind=REAL_DATATYPE), , intent(inout), allocatable    :: h1(:), h2(:)
++  real(kind=REAL_DATATYPE), intent(inout), allocatable    :: h1(:), h2(:)
    integer(kind=MPI_KIND)       :: allreduce_request1
    logical                      :: useNonBlockingCollectives
    logical                      :: useNonBlockingCollectivesCols
