@@ -223,6 +223,7 @@ mpich_hash=49bb9c1b3dd4cc54e5567e7ee47800d666f1c3c0;  \
 git reset --hard $mpich_hash ; \
    git submodule update --init ;\
    sh autogen.sh ;\
+   cd ..;\
    else  wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf -  ;\
    fi \
 && cd $mpich_prefix     \
