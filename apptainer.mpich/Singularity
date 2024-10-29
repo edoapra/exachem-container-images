@@ -306,9 +306,9 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&           echo 'CCCCCCCCCC EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt' \
 &&           cat EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt \
 &&           echo 'CCCCCCCCCC EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt' \
-&&           echo 'CCCCCCCCCC $CMAKE_INSTALL_PREFIX/share/cmake/tamm/tamm-config.cmake' \
-&&           cat $CMAKE_INSTALL_PREFIX/share/cmake/tamm/tamm-config.cmake \
-&&           echo 'CCCCCCCCCC $CMAKE_INSTALL_PREFIX/share/cmake/tamm/tamm-config.cmake' \
+&&           echo 'CCCCCCCCCC /opt/install/exachem/share/cmake/tamm/tamm-config.cmake' \
+&&           cat /opt/install/exachem/share/cmake/tamm/tamm-config.cmake \
+&&           echo 'CCCCCCCCCC /opt/install/exachem/share/cmake/tamm/tamm-config.cmake' \
 &&             make install  \
 &&	     echo exit code for make install $?  \
 &&	     bash -c "if [[ -f /opt/install/exachem/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi"  \
