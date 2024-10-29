@@ -166,13 +166,14 @@ apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-c
 && ls -lrt  /opt/rocm* || true \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo 'dpkg-query -L rocminfo' $(dpkg-query -L rocminfo) \
-&& if [ $UBUNTU_CODE = "jammy_std" ]; then ln -sf /usr/bin/rocm_agent_enumerator $ROCM_PATH/bin/. ;  ln -sf /usr/bin/rocminfo $ROCM_PATH/bin/. ; fi \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
-&& echo 'rocminfo' $(/opt/rocm/bin/rocm_agent_enumerator) \
+&& echo 'rocminfo' $(/opt/rocm/bin/rocm_agent_enumerator) || true \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo 'hipcc --version' $(hipcc --version) \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo 'hipconfig' $(hipconfig) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'offload-arch -v' $(offload-arch -v) \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo ' ls -l  ROCM_PATH/lib' $(ls -l $ROCM_PATH/lib)   \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
@@ -269,7 +270,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DDFT_CPU=ON " \
 && 	     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3"  \
 &&              if [ ${GPU} = "nvidia" ]; then echo "nvidia gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_CUDA=ON -DGPU_ARCH=${GPU_ARCH}" ; fi  \
-&&              if [ ${GPU} = "amd" ]; then echo "amd gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_HIP=ON -DROCM_ROOT=$ROCM_PATH -DGPU_ARCH=${GPU_ARCH} -DCMAKE_HIP_ARCHITECTURES=${GPU_ARCH} -DGCCROOT=/usr " ; ls -lrt $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/ ; ln -sf $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/rocblas.h; fi  \
+&&              if [ ${GPU} = "amd" ]; then echo "amd gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_HIP=ON -DROCM_ROOT=$ROCM_PATH -DGPU_ARCH=${GPU_ARCH} -DCMAKE_HIP_ARCHITECTURES=${GPU_ARCH} -DGCCROOT=/usr " ;  fi  \
 &&             export USE_SCALAPACK=OFF \
 &&              if [ ${SCALAPACK} = "y" ]; then echo "SCALAPACK ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_SCALAPACK=ON "; export USE_SCALAPACK=ON; fi   \
 &&              if [ \( ${CC} = "gcc" \) -a \(  ${ELPA} = "y" \) ]; then echo "ELPA ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON " ; fi  \
