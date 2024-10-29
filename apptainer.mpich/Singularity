@@ -277,10 +277,11 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
+&&           echo 'CCCCCCCCC TAMM_External-prefix/src/TAMM_External-build/compile_commands.json' \
+&&           cat TAMM_External-prefix/src/TAMM_External-build/compile_commands.json \
+&&           echo 'CCCCCCCCC TAMM_External-prefix/src/TAMM_External-build/compile_commands.json' \
 && 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
 && 	     USE_SCALAPACK="$USE_SCALAPACK" CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
-&&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullsep09/patches/CMakeLists_elpa.patch \
-&&           patch -p1 < CMakeLists_elpa.patch \
 &&             make -j3 || { echo "Compilation failure in tamm step";
                echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
 	    cat $(find /opt/TAMM/ -name config.log) || true ; \
@@ -300,6 +301,12 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&             export CMAKE_OPTIONS  \
 &&	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 &&	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&           echo 'CCCCCCCCCC EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt' \
+&&           cat EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt \
+&&           echo 'CCCCCCCCCC EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt' \
+&&           echo 'CCCCCCCCCC $CMAKE_INSTALL_PREFIX/share/cmake/tamm/tamm-config.cmake' \
+&&           cat $CMAKE_INSTALL_PREFIX/share/cmake/tamm/tamm-config.cmake \
+&&           echo 'CCCCCCCCCC $CMAKE_INSTALL_PREFIX/share/cmake/tamm/tamm-config.cmake' \
 &&             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; }  \
 &&	     echo exit code for compilation $?  \
 &&             make install  \
