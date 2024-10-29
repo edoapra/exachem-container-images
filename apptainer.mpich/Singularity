@@ -290,7 +290,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              make install   \
 && 	     echo exit code for TAMM make install $?   \
 &&              cd /opt/exachem   \
-&&           git checkout 69b8228eb10c5f12ba7ba1ea5ad61e1addcb1a59 \
+&&           git checkout 2e102349de1871f7d341ae77e6715d275c681ad9 \
 && 	     mkdir build && cd build   \
 && 	     echo ' === ls -l /opt/install/exachem ===' $(ls -l /opt/install/exachem)   \
 && 	     echo ' === ls -l /opt/install/exachem/lib ===' $(ls -l /opt/install/exachem/lib)   \
