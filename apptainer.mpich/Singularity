@@ -302,6 +302,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&             export CMAKE_OPTIONS  \
 &&	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 &&	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&           if [ $GPU = "amd" ]; then sed -i -e 's/gfx906/'"$GPU_ARCH"'/g' $(find . -name "flags.make") ; fi \
 &&             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; }  \
 &&	     echo exit code for compilation $?  \
 &&           echo 'CCCCCCCCCC EXACHEM_External-prefix/src/EXACHEM_External-build/CMakeCache.txt' \
