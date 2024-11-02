@@ -317,6 +317,8 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              make install   \
 && 	     echo exit code for TAMM make install $?   \
 &&              cd /opt/exachem   \
+&& sed -i 's/(int)\ chem_env.ioptions.scf_options.lshift\ ==\ 0/chem_env.ioptions.scf_options.lshift\ <\ 1e-9/' exachem/scf/scf_guess.cpp \
+&& grep lshift exachem/scf/scf_guess.cpp \
 && 	     mkdir build && cd build   \
 && 	     echo ' === ls -l /opt/install/exachem ===' $(ls -l /opt/install/exachem)   \
 && 	     echo ' === ls -l /opt/install/exachem/lib ===' $(ls -l /opt/install/exachem/lib)   \
