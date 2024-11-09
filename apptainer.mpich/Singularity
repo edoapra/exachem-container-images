@@ -291,6 +291,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem    \
 &&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
+&& echo '$$$$$ Last TAMM commit $(git show --summary) $$$$' \
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC' "  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DDFT_CPU=ON " \
