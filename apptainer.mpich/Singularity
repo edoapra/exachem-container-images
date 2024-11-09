@@ -317,8 +317,6 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              make install   \
 && 	     echo exit code for TAMM make install $?   \
 &&              cd /opt/exachem   \
-&& sed -i '589s/.*/\ \ if(iter\ ==\ 15){/' exachem/scf/scf_hartree_fock.cpp \
-&& grep iter exachem/scf/scf_hartree_fock.cpp \
 && 	     mkdir build && cd build   \
 && 	     echo ' === ls -l /opt/install/exachem ===' $(ls -l /opt/install/exachem)   \
 && 	     echo ' === ls -l /opt/install/exachem/lib ===' $(ls -l /opt/install/exachem/lib)   \
