@@ -198,7 +198,7 @@ $FC -v \
 	   export libfabric_version=${OFI} ; \
 	   echo using libfabric_version "$libfabric_version" ; \
    export mpich_options=$mpich_options" --with-libfabrics="$MPICH_DIR ; \
-   apt-get install -y libconfig-dev libsensors-dev ;\
+   apt-get install -y libconfig-dev libsensors-dev libuv1-dev;\
    mkdir -p $MPICH_DIR  ;\
    cd $MPICH_DIR ; \
    git clone https://github.com/HewlettPackard/shs-cassini-headers ;\
