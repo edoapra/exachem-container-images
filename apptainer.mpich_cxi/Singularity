@@ -206,11 +206,13 @@ $FC -v \
    cd / ;
    git clone https://github.com/HewlettPackard/shs-libcxi ; \
    cd shs-libcxi ; \
+   sh autogen.sh ; \
    make CFLAGS="-I$(pwd)/shs-cassini-headers/include/ -I$(pwd)/shs-cxi-driver/include/"  ;\
    make CFLAGS="-I$(pwd)/shs-cassini-headers/include/ -I$(pwd)/shs-cxi-driver/include/" install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec  ;\
    cd .. ;\
    git clone https://github.com/ofiwg/libfabric libfabrics-git ;\ 
  cd libfabric-$libfabric_version ; \
+   sh autogen.sh ; \
  mkdir build && cd build  ; \
  ../configure --prefix=$MPICH_DIR --enable-cxi=$MPICH_DIR  --with-cassini-headers=$MPICH_DIR/shs-cassini-headers --with-cxi-uapi-headers=$MPICH_DIR/shs-cxi-driver \
  && make -j4 && make install ; \
