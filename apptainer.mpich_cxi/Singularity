@@ -198,7 +198,7 @@ $FC -v \
 	   export libfabric_version=${OFI} ; \
 	   echo using libfabric_version "$libfabric_version" ; \
    export mpich_options=$mpich_options" --with-libfabrics="$MPICH_DIR ; \
-   apt-get install -y libconfig-dev libsensors-dev libuv1-dev libfuse-dev libyaml-dev;\
+   apt-get install -y libconfig-dev libsensors-dev libuv1-dev libfuse-dev libyaml-dev libjson-c-dev libcurl4-openssl-dev  ;\
    mkdir -p $MPICH_DIR  ;\
    cd $MPICH_DIR ; \
    git clone https://github.com/HewlettPackard/shs-cassini-headers ;\
@@ -208,14 +208,15 @@ $FC -v \
    cd shs-libcxi ; \
    sh autogen.sh ; \
    ./configure --prefix=$MPICH_DIR ;\
-   make CFLAGS="-I$(pwd)/shs-cassini-headers/include/ -I$(pwd)/shs-cxi-driver/include/"  ;\
-   make CFLAGS="-I$(pwd)/shs-cassini-headers/include/ -I$(pwd)/shs-cxi-driver/include/" install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec  ;\
-   cd .. ;\
-   git clone https://github.com/ofiwg/libfabric libfabrics-git ;\ 
- cd libfabric-$libfabric_version ; \
+   make CFLAGS="-I$MPICH_DIR/shs-cassini-headers/include/ -I$MPICH_DIR/shs-cxi-driver/include/" pkg_CFLAGS=-Wall -i  ;\
+   make CFLAGS="-I$MPICH_DIR/shs-cassini-headers/include/ -I$MPICH_DIR/shs-cxi-driver/include/" install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec   ;\
+   cd .. ; \
+   git clone https://github.com/ofiwg/libfabric  ;\ 
+   cd libfabric ; \
    sh autogen.sh ; \
  mkdir build && cd build  ; \
- ../configure --prefix=$MPICH_DIR --enable-cxi=$MPICH_DIR  --with-cassini-headers=$MPICH_DIR/shs-cassini-headers --with-cxi-uapi-headers=$MPICH_DIR/shs-cxi-driver \
+ ../configure --prefix=$MPICH_DIR --enable-cxi=$MPICH_DIR  --with-cassini-headers=$MPICH_DIR/shs-cassini-headers --with-cxi-uapi-headers=$MPICH_DIR/shs-cxi-driver  || true\
+&& cat config.log \
  && make -j4 && make install ; \
  if [ ! -f $MPICH_DIR/bin/fi_info ]; then echo fi_info\ not\ found ; exit 1 ; fi ;\
 	 elif [ ${MPICH_DEVICE} = ch4:ucx ]; then echo 'installing ucx' ; \
