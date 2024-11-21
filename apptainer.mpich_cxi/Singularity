@@ -207,6 +207,7 @@ $FC -v \
    git clone https://github.com/HewlettPackard/shs-libcxi ; \
    cd shs-libcxi ; \
    sh autogen.sh ; \
+   ./configure --prefix=$MPICH_DIR ;\
    make CFLAGS="-I$(pwd)/shs-cassini-headers/include/ -I$(pwd)/shs-cxi-driver/include/"  ;\
    make CFLAGS="-I$(pwd)/shs-cassini-headers/include/ -I$(pwd)/shs-cxi-driver/include/" install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec  ;\
    cd .. ;\
