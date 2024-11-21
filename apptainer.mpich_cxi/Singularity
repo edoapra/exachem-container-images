@@ -194,10 +194,10 @@ apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-c
 if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
 $FC -v \
 && apt-get  install -y libconfig-dev libsensors-dev \
-	 && if [ ${MPICH_DEVICE} = ch4:ofi ] && [ ${OFI} != builtin ] ; then echo 'installing libfabrics' ; \
+	 && if [ ${MPICH_DEVICE} = ch4:ofi ] && [ ${OFI} != builtin ] ; then echo 'installing libfabric' ; \
 	   export libfabric_version=${OFI} ; \
 	   echo using libfabric_version "$libfabric_version" ; \
-   export mpich_options=$mpich_options" --with-libfabrics="$MPICH_DIR ; \
+   export mpich_options=$mpich_options" --with-libfabric="$MPICH_DIR ; \
    apt-get install -y libconfig-dev libsensors-dev libuv1-dev libfuse-dev libyaml-dev libjson-c-dev libcurl4-openssl-dev  ;\
    mkdir -p $MPICH_DIR  ;\
    cd $MPICH_DIR ; \
