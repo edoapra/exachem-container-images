@@ -6,14 +6,12 @@ Stage: spython-base
    UBUNTU_VERSION=focal
 
 %files
-    usemyga.patch /tmp/usemyga.patch
+
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
 %setup
     #!/bin/bash
-    cat usemyga.patch
-    cp usemyga.patch /tmp
     echo "$(readlink /proc/$$/exe) is the shell in use"
     env|egrep SHELL
     ls -la  ${GITHUB_WORKSPACE}
