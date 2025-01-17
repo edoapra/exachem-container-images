@@ -126,7 +126,7 @@ jobs:
           else
               echo "docker tar not found found"
               mkdir -p ~/cache 
-              docker build -t myubuntu:jammy -f Dockerfile.ubuntu
+              docker build -t myubuntu:jammy -f Dockerfile.ubuntu .
               docker save -o ~/cache/myubuntu_jammy.tar myubuntu:jammy
           fi
       - name: builddate
