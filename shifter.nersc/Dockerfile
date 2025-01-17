@@ -1,6 +1,6 @@
 #
 
-FROM myubuntu:jammy
+FROM ghcr.io/edoapra/ubuntu:latest
 
 LABEL maintainer="Edoardo Apra <edoardo.apra@pnnl.gov>"
 
