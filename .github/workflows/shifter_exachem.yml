@@ -119,14 +119,14 @@ jobs:
           fi
       - name: save docker ubuntu image
         run: |
-        if [  -f ~/cache/ubuntu_jammy.tar ]; then echo "docker tar found";
-           docker load -i ~/cache/ubuntu_jammy.tar ; \
-        else
-           cd ${{ matrix.folder }} ;\
-           mkdir -p ~/cache ;\
-           docker pull ubuntu:jammy ; \
-           docker save -o ~/cache/ubuntu_jammy.tar ubuntu:jammy
-        fi
+          if [  -f ~/cache/ubuntu_jammy.tar ]; then
+              echo "docker tar found"
+              docker load -i ~/cache/ubuntu_jammy.tar 
+          else
+              mkdir -p ~/cache 
+              docker pull ubuntu:jammy 
+              docker save -o ~/cache/ubuntu_jammy.tar ubuntu:jammy
+          fi
       - name: builddate
         id: build-date
         run: |
