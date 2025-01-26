@@ -122,7 +122,7 @@ jobs:
       - name: save docker ubuntu image
         run: |
           ubuntu_tag=$(echo ghcr.io/${{ github.repository }}/ubuntu:latest| tr '[:upper:]' '[:lower:]')
-          echo $ubuntu_tag >> $GITHUB_ENV
+          echo "ubuntu_tag=$ubuntu_tag" >> $GITHUB_ENV
           if [  -f ~/cache/myubuntu_jammy.tar ]; then
               echo "docker tar found"
               docker load -i ~/cache/myubuntu_jammy.tar
