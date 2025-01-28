@@ -166,7 +166,6 @@ jobs:
       if: ${{ github.event_name != 'pull_request' }}
       run: |
         echo "push_truefalse=true" >> $GITHUB_ENV
-        shell: bash
     - name: build an apptainer container
       run: |
         cd ${{ matrix.folder }}
