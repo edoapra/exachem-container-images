@@ -157,15 +157,15 @@ jobs:
            cd ${{ matrix.folder }} ;\
         apptainer pull docker://ubuntu:jammy ; \
         fi
-      - name: push_false
-        id: push_false
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          echo "push_truefalse=false" >> $GITHUB_ENV
-      - name: push_true
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          echo "push_truefalse=true" >> $GITHUB_ENV
+    - name: push_false
+      id: push_false
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        echo "push_truefalse=false" >> $GITHUB_ENV
+    - name: push_true
+      if: ${{ github.event_name != 'pull_request' }}
+      run: |
+        echo "push_truefalse=true" >> $GITHUB_ENV
         shell: bash
     - name: build an apptainer container
       run: |
