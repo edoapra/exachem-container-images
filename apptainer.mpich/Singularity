@@ -22,6 +22,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 #    ls -l ${SINGULARITY_ROOTFS}
     rm -f ${SINGULARITY_ROOTFS}/*.txt || true
     bash -c "if [[ -z '${GPU}' ]]; then echo 'GPU=nvidia ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; else echo 'GPU is ${GPU}'; echo 'GPU=${GPU} ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; fi"
+    bash -c "if [[ -z '${CC}' ]]; then echo 'CC=gcc ' >> ${SINGULARITY_ROOTFS}/cc.txt ; else echo 'CC is ${CC}'; echo 'CC=${CC} ' >> ${SINGULARITY_ROOTFS}/cc.txt ; fi"
     bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_PROGRESS_RANK ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
     bash -c "if [[ -z '${OFI}' ]]; then echo 'OFI=builtin ' >> ${SINGULARITY_ROOTFS}/OFI.txt ; else echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"
@@ -61,9 +62,15 @@ if [ $mpich_major = '4' ]; then
 else
     export mpich_options=' '
 fi 
+ if [ $MPICH = aurora ]; then
+    export mpich_options=$mpich_options' --disable-maintainer-mode --with-pm=no --enable-romio --with-slurm=no --with-pmi=pmix --with-pmix=/opt/pmix '
+fi 
+ if [ $FC = gfortran ]; then
+    export mpich_options=$mpich_options' FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch '
+fi 
 export MPICH_DIR=/opt/mpich
-export SINGULARITY_mpich=$mpich
-export SINGULARITY_mpich_prefix=mpich-$mpich
+export MPICH_AURORA="4.3.0" 
+export PMIX_VERSION="4.2.9" 
 export `cat ./gpu.txt`
 echo 'ROCM_VERSION=0' > rocm_version.txt ;
 bash -o  pipefail -c "if [[ $(echo $GPU | cut -c 1-3)  == 'amd' ]]; then echo gpus is amd;
@@ -90,6 +97,7 @@ export PATH=$MPICH_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_
 export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:"$ROCM_PATH"/lib
 export SINGULARITY_PATH=$PATH
 export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export `cat ./cc.txt`
 export `cat ./ga_runtime.txt`
 export `cat ./mpi_impl.txt`
 export `cat ./exachem_branch.txt`
@@ -102,18 +110,26 @@ export `cat ./elpa.txt`
 
 echo GPU is $GPU
 echo ROCM_PATH is ${ROCM_PATH}
+echo CC is $CC
 echo GA_RUNTIME is $GA_RUNTIME
 echo MPI_IMPL is $MPI_IMPL
  echo MPICH is $MPICH
+if [ $MPICH = aurora ]; then
+    export MPICH_VERSION=$MPICH_AURORA
+    	   else
+    export MPICH_VERSION=$MPICH
+fi 
  echo MPICH_DEVICE is $MPICH_DEVICE
 echo EXACHEM_BRANCH is $EXACHEM_BRANCH
 echo TAMM_BRANCH is $TAMM_BRANCH
- if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
- else export FC=gfortran ; export CC=gcc; export CXX=g++; fi \
+if [ "$CC" = "gcc" ]; then export FC=gfortran ; export CC=$CC; export CXX=g++; \
+elif [ "$CC" = "icx" ]; then export FC=ifx ; export CC=icx; export CXX=icpcx; \
+elif [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
+fi \
 && echo 'FC is' "$FC"  \
 && echo ' CC is ' "$CC" \
 && echo ' CXX is ' "$CXX" \
-&& echo MPICH is $MPICH \
+&& echo MPICH_VERSION is $MPICH_VERSION \
 && echo OFI is $OFI\
 && cd / \
 && pwd \
@@ -190,10 +206,28 @@ apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-c
 && echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
 && apt-get clean  \
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
-&& if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
 && echo FC is $FC
 
 if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
+&& wget --progress=dot:giga https://github.com/Cray-HPE/xpmem/tarball/master -O xpmem.tar.gz \
+&& tar xzf xpmem.tar.gz \
+&& rm xpmem.tar.gz \
+&& cd Cray-HPE-xpmem* \
+&& sh autogen.sh \
+&& ./configure --prefix=$MPICH_DIR --disable-kernel-module  \
+&& make -j3 \
+&& make install \
+&& cd .. \
+&& if [ $MPICH = aurora ]; then
+wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}.tar.gz \
+&& tar xzf pmix-${PMIX_VERSION}.tar.gz \
+&& cd pmix-${PMIX_VERSION} \
+&& ./configure --prefix=/opt/pmix \
+&& make -j3 \
+&& make -j3 install \
+&& cd .. \
+&& rm -rf pmix-*.*
+fi \
 $FC -v \
 	 && if [ ${MPICH_DEVICE} = ch4:ofi ] && [ ${OFI} != builtin ] ; then echo 'installing libfabrics' ; \
 	   export libfabric_version=${OFI} ; \
@@ -220,14 +254,14 @@ $FC -v \
      fi \
    && cd ../..  \
 && echo ' mpich_options is set to' $mpich_options \
-&& if [ ${MPICH} = main ]; then git clone -b main https://github.com/pmodels/mpich.git mpich-main ;  \
+&& if [ ${MPICH_VERSION} = main ]; then git clone -b main https://github.com/pmodels/mpich.git mpich-main ;  \
 cd mpich-main ; \
 mpich_hash=49bb9c1b3dd4cc54e5567e7ee47800d666f1c3c0;  \
 git reset --hard $mpich_hash ; \
    git submodule update --init ;\
    sh autogen.sh ;\
    cd ..;\
-   else  wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf -  ;\
+   else  wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz  -O - | tar xzf -  ;\
    fi \
 && cd $mpich_prefix     \
 && if [ $mpich_major = '3' ]; then echo 'mpich 3 autotools ' ; \
@@ -247,7 +281,8 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 --enable-fortran=all \
 --disable-opencl --enable-silent-rules \
 --disable-cuda \
-  FC=$FC \
+--with-xpmem=$MPICH_DIR \
+  FC=$FC CC=$CC CXX=$CXX \
 && head config.log \
 && tail -300 config.log \
 &&   echo 'checkcheckechk******' \
