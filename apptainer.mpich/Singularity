@@ -50,11 +50,31 @@ echo "$(readlink /proc/$$/exe) is the shell in use"
 #https://sylabs.io/guides/3.6/user-guide/mpi.html
 export DEBIAN_FRONTEND=noninteractive
 export `cat ./mpich.txt`
-export mpich_prefix=mpich-$MPICH
+export `cat ./cc.txt`
+export `cat ./ga_runtime.txt`
+export `cat ./mpi_impl.txt`
+export `cat ./exachem_branch.txt`
+export `cat ./tamm_branch.txt`
+export `cat ./mpich_device.txt`
+export `cat ./mpich.txt`
+export `cat ./ofi.txt`
+export `cat ./scalapack.txt`
+export `cat ./elpa.txt`
+export `cat ./gpu.txt`
+export MPICH_DIR=/opt/mpich
+export MPICH_AURORA="4.3.0" 
+export PMIX_VERSION="4.2.9" 
+echo MPICH is $MPICH
+if [ $MPICH = aurora ]; then
+    export MPICH_VERSION=$MPICH_AURORA
+    	   else
+    export MPICH_VERSION=$MPICH
+fi 
+export mpich_prefix=mpich-$MPICH_VERSION
 echo mpich_prefix is $mpich_prefix 
-export mpich_major=$(echo $MPICH | cut -d . -f1) 
+export mpich_major=$(echo $MPICH_VERSION | cut -d . -f1) 
 echo mpich_major is $mpich_major 
-export mpich_minor=$(echo $MPICH | cut -d . -f2) 
+export mpich_minor=$(echo $MPICH_VERSION | cut -d . -f2) 
 echo mpich_minor is $mpich_minor 
 echo mpich_major is $mpich_major 
 if [ $mpich_major = '4' ]; then
@@ -68,10 +88,6 @@ fi
  if [ $FC = gfortran ]; then
     export mpich_options=$mpich_options' FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch '
 fi 
-export MPICH_DIR=/opt/mpich
-export MPICH_AURORA="4.3.0" 
-export PMIX_VERSION="4.2.9" 
-export `cat ./gpu.txt`
 echo 'ROCM_VERSION=0' > rocm_version.txt ;
 bash -o  pipefail -c "if [[ $(echo $GPU | cut -c 1-3)  == 'amd' ]]; then echo gpus is amd;
 echo 'ROCM_VERSION='`echo $GPU | cut -c 16-` > rocm_version.txt ;
@@ -97,28 +113,12 @@ export PATH=$MPICH_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_
 export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:"$ROCM_PATH"/lib
 export SINGULARITY_PATH=$PATH
 export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
-export `cat ./cc.txt`
-export `cat ./ga_runtime.txt`
-export `cat ./mpi_impl.txt`
-export `cat ./exachem_branch.txt`
-export `cat ./tamm_branch.txt`
-export `cat ./mpich_device.txt`
-export `cat ./mpich.txt`
-export `cat ./ofi.txt`
-export `cat ./scalapack.txt`
-export `cat ./elpa.txt`
 
 echo GPU is $GPU
 echo ROCM_PATH is ${ROCM_PATH}
 echo CC is $CC
 echo GA_RUNTIME is $GA_RUNTIME
 echo MPI_IMPL is $MPI_IMPL
- echo MPICH is $MPICH
-if [ $MPICH = aurora ]; then
-    export MPICH_VERSION=$MPICH_AURORA
-    	   else
-    export MPICH_VERSION=$MPICH
-fi 
  echo MPICH_DEVICE is $MPICH_DEVICE
 echo EXACHEM_BRANCH is $EXACHEM_BRANCH
 echo TAMM_BRANCH is $TAMM_BRANCH
@@ -252,9 +252,9 @@ if [ ! -f /opt/mpich/lib/libmpi.a ]; then
 	    cd shs-libcxi 
 	    sh autogen.sh 
 	    ./configure --prefix=$MPICH_DIR 
-	    make CFLAGS='-I${MPICH_DIR}/shs-cassini-headers/include/ -I${MPICH_DIR}/shs-cxi-driver/include/' pkg_CFLAGS=-Wall -i 
-	    make CFLAGS='-I${MPICH_DIR}/shs-cassini-headers/include/ -I${MPICH_DIR}/shs-cxi-driver/include/' install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec  
-	    export libfabric_options=' --enable-cxi=${MPICH_DIR}  --with-cassini-headers=${MPICH_DIR}/shs-cassini-headers --with-cxi-uapi-headers=${MPICH_DIR}/shs-cxi-driver '
+	    make CFLAGS='-I'${MPICH_DIR}/shs-cassini-headers/include/ -I'${MPICH_DIR}'/shs-cxi-driver/include/' pkg_CFLAGS=-Wall -i 
+	    make CFLAGS='-I'${MPICH_DIR}/shs-cassini-headers/include/ -I'${MPICH_DIR}'/shs-cxi-driver/include/' install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec  
+	    export libfabric_options=' --enable-cxi='${MPICH_DIR}'  --with-cassini-headers='${MPICH_DIR}'/shs-cassini-headers --with-cxi-uapi-headers='${MPICH_DIR}'/shs-cxi-driver '
 	    echo 'libfabric_options are' $libfabric_options 
 	    rm -rf shs-* 
 	    cd $MYROOT ; echo 'pwd ' $(pwd) ;ls -lrta 
@@ -265,8 +265,8 @@ if [ ! -f /opt/mpich/lib/libmpi.a ]; then
 	mkdir build && cd build
 	../configure --prefix=${MPICH_DIR} $libfabric_options 
 	make -j4 && make install 
-	export mpich_options='${mpich_options} --with-libfabric=${MPICH_DIR}' 
-	echo 'mpich_options are ${mpich_options}' 
+	export mpich_options='${mpich_options} --with-libfabric='${MPICH_DIR}
+	echo 'mpich_options are '${mpich_options}
 	if [ ! -f ${MPICH_DIR}/bin/fi_info ]; then
 	    echo fi_info\ not\ found
 	    exit 1
