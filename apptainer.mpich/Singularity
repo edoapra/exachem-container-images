@@ -208,7 +208,8 @@ apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-c
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
 && echo FC is $FC
 
-if [ ! -f /opt/mpich/lib/libmpi.a ]; then  
+export MYROOT=/
+if [ ! -f /opt/mpich/lib/libmpi.a ]; then
     wget --progress=dot:giga https://github.com/Cray-HPE/xpmem/tarball/master -O xpmem.tar.gz 
     tar xzf xpmem.tar.gz 
     rm xpmem.tar.gz 
@@ -219,6 +220,7 @@ if [ ! -f /opt/mpich/lib/libmpi.a ]; then
     make install 
     cd ..
     if [ $MPICH = aurora ]; then
+        apt-get install -y libevent-dev
 	wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}.tar.gz 
 	tar xzf pmix-${PMIX_VERSION}.tar.gz 
 	cd pmix-${PMIX_VERSION} 
