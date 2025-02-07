@@ -192,9 +192,10 @@ jobs:
         ubuntu_ver=$(cat /etc/os-release | grep VERSION_ID |cut -d \" -f 2)
         dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
         sudo apt-get purge -y azure-cli || true
-        sudo apt-get purge -y google-cloud-cli microsoft-edge-stable dotnet-sdk-* google-chrome-stable firefox
-        sudo apt-get purge -y temurin-*-jdk
-        sudo apt-get purge -y llvm-*-dev
+        sudo apt-get purge -y google-cloud-cli microsoft-edge-stable  google-chrome-stable firefox
+        sudo apt-get purge -y dotnet-sdk-*
+        sudo apt-get purge -y temurin-*-jdk 
+        sudo apt-get purge -y llvm-*-dev 
         if [[ $ubuntu_ver == "20.04" ]]; then
         sudo apt-get purge -y hhvm
         sudo apt-get purge -y libgl1-mesa-dri
@@ -204,6 +205,7 @@ jobs:
         dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
         df -h
         fi
+      shell: bash
       shell: bash
     - name: Setup cache
       id: setup-cache
