@@ -158,7 +158,7 @@ jobs:
         echo "simd=$(./guess_simd.sh)" >> $GITHUB_ENV
     - name: exachem version tag
       run: |
-        if [ ${{ matrix.ga_runtime }} != main ]]l then
+        if [ ${{ matrix.exachem_branch }} != main ]]; then
            myversion=.${{ matrix.exachem_branch }}
         fi
         myversion+=.${{ matrix.gpu }}
