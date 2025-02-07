@@ -218,17 +218,16 @@ if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
 && make -j3 \
 && make install \
 && cd .. \
-&& if [ $MPICH = aurora ]; then \
-wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}.tar.gz \
+&& if [ $MPICH = aurora ]; then wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}.tar.gz \
 && tar xzf pmix-${PMIX_VERSION}.tar.gz \
 && cd pmix-${PMIX_VERSION} \
 && ./configure --prefix=/opt/pmix \
 && make -j3 \
 && make -j3 install \
 && cd .. \
-&& rm -rf pmix-*.*
-fi \
-$FC -v \
+&& rm -rf pmix-*.* ;
+ fi \
+&& $FC -v \
 	 && if [ ${MPICH_DEVICE} = ch4:ofi ] && [ ${OFI} != builtin ] ; then echo 'installing libfabrics' ; \
 	   export libfabric_version=${OFI} ; \
 	   echo using libfabric_version "$libfabric_version" ; \
@@ -294,6 +293,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 && if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo mpif90 show is $($MPICH_DIR/bin/mpif90 -show) \
 && cd .. ; rm -rf *tar*gz mpich-*  ;fi
+
 
  if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo '********' \
