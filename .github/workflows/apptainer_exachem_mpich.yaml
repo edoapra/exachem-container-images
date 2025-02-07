@@ -206,7 +206,6 @@ jobs:
         df -h
         fi
       shell: bash
-      shell: bash
     - name: Setup cache
       id: setup-cache
       uses: actions/cache@v4
