@@ -194,7 +194,7 @@ jobs:
         sudo apt-get purge -y azure-cli || true
         sudo apt-get purge -y google-cloud-cli microsoft-edge-stable  google-chrome-stable firefox
         sudo apt-get purge -y dotnet-sdk-*
-        sudo apt-get purge -y temurin-*-jdk 
+        sudo apt-get purge -y temurin-*-jdk  openjdk-*
         sudo apt-get purge -y llvm-*-dev 
         if [[ $ubuntu_ver == "20.04" ]]; then
         sudo apt-get purge -y hhvm
