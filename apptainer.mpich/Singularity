@@ -252,9 +252,9 @@ if [ ! -f /opt/mpich/lib/libmpi.a ]; then
 	    cd shs-libcxi 
 	    sh autogen.sh 
 	    ./configure --prefix=$MPICH_DIR 
-	    make CFLAGS='-I'${MPICH_DIR}'/shs-cassini-headers/include/ -I'${MPICH_DIR}'/shs-cxi-driver/include/ pkg_CFLAGS=-Wall -i '
-	    make CFLAGS='-I'${MPICH_DIR}'/shs-cassini-headers/include/ -I'${MPICH_DIR}'/shs-cxi-driver/include/ install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec '
-	    export libfabric_options=' --enable-cxi='${MPICH_DIR}'  --with-cassini-headers='${MPICH_DIR}'/shs-cassini-headers --with-cxi-uapi-headers='${MPICH_DIR}'/shs-cxi-driver '
+	    make CFLAGS="-I${MPICH_DIR}/shs-cassini-headers/include/ -I${MPICH_DIR}'/shs-cxi-driver/include/" pkg_CFLAGS=-Wall -i 
+	    make CFLAGS="-I${MPICH_DIR}/shs-cassini-headers/include/ -I${MPICH_DIR}/shs-cxi-driver/include/" install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec  
+	    export libfabric_options=" --enable-cxi=${MPICH_DIR}  --with-cassini-headers=${MPICH_DIR}/shs-cassini-headers --with-cxi-uapi-headers=${MPICH_DIR}/shs-cxi-driver "
 	    echo 'libfabric_options are' $libfabric_options 
 	    rm -rf shs-* 
 	    cd $MYROOT ; echo 'pwd ' $(pwd) ;ls -lrta 
@@ -265,7 +265,7 @@ if [ ! -f /opt/mpich/lib/libmpi.a ]; then
 	mkdir build && cd build
 	../configure --prefix=${MPICH_DIR} $libfabric_options 
 	make -j4 && make install 
-	export mpich_options='${mpich_options} --with-libfabric='${MPICH_DIR}
+	export mpich_options="${mpich_options} --with-libfabric=${MPICH_DIR}"
 	echo 'mpich_options are '${mpich_options}
 	if [ ! -f ${MPICH_DIR}/bin/fi_info ]; then
 	    echo fi_info\ not\ found
