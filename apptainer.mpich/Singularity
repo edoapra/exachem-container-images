@@ -210,15 +210,17 @@ intel-oneapi-tbb-devel
 
     find /opt/intel/oneapi/ -name "*cmake"
     mkdir neo && cd neo 
-    export IGCV=1.0.16510.2
-    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-core_${IGCV}_amd64.deb 
-    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-opencl_${IGCV}_amd64.deb 
-    export CRTV=24.13.29138.7 
-    export CRTVS=1.3.29138.7
+#    export IGCV=1.0.16510.2
+    export IGCV=2.5.6
+    export IGCVV=${IGCV}+18417
+    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-core_${IGCVV}_amd64.deb 
+    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-opencl_${IGCVV}_amd64.deb 
+    export CRTV=24.52.32224.5
+    export CRTVS=1.6.32224.5
 # conflict with libze-intel-gpu1    
 #    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-level-zero-gpu_${CRTVS}_amd64.deb 
     wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb 
-    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.3.18_amd64.deb
+    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.5_amd64.deb
     dpkg -i *.deb && cd .. && rm -rf neo
  fi
 #    sudo apt-get install -y level-zero clinfo
