@@ -182,14 +182,14 @@ fi \
     TERM=dumb
     wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null 
     echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list 
-    wget -O- https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor | tee /usr/share/keyrings/intel-graphics-archive-keyring.gpg > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/intel-graphics-archive-keyring.gpg arch=amd64] https://repositories.intel.com/gpu/ubuntu jammy unified" > /etc/apt/sources.list.d/intel-graphics.list
+#    wget -O- https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor | tee /usr/share/keyrings/intel-graphics-archive-keyring.gpg > /dev/null
+#    echo "deb [signed-by=/usr/share/keyrings/intel-graphics-archive-keyring.gpg arch=amd64] https://repositories.intel.com/gpu/ubuntu jammy unified" > /etc/apt/sources.list.d/intel-graphics.list
     apt-get update
     export ONEAPIV=2025.0
-    apt-get install -y libze-intel-gpu1 libze1 libze-dev
+#    apt-get install -y libze-intel-gpu1 libze1 libze-dev
     apt-get install -y intel-oneapi-compiler-fortran-${ONEAPIV} intel-oneapi-mkl-${ONEAPIV} intel-oneapi-compiler-dpcpp-cpp-${ONEAPIV} \
   intel-oneapi-mkl-core-devel-${ONEAPIV}  intel-oneapi-mkl-sycl-devel-${ONEAPIV} \
-intel-oneapi-tbb-devel 
+intel-oneapi-tbb-devel intel-oneapi-umf
     ls -l /opt/intel/oneapi/mkl/latest/lib/intel64/libmkl*.a 
     export MKLROOT=/opt/intel/oneapi/mkl/latest/
     export PKG_CONFIG_PATH=${MKLROOT}/lib/pkgconfig:${PKG_CONFIG_PATH}
@@ -210,20 +210,26 @@ intel-oneapi-tbb-devel
 
     find /opt/intel/oneapi/ -name "*cmake"
     mkdir neo && cd neo 
-#    export IGCV=1.0.16510.2
-    export IGCV=2.5.6
-    export IGCVV=2_${IGCV}+18417
-    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/v${IGCV}/intel-igc-core-${IGCVV}_amd64.deb 
-    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/v${IGCV}/intel-igc-opencl-${IGCVV}_amd64.deb 
-    export CRTV=24.52.32224.5
-    export CRTVS=1.6.32224.5
+    export IGCV=1.0.16510.2
+    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-core_${IGCV}_amd64.deb
+    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-opencl_${IGCV}_amd64.deb
+    export CRTV=24.13.29138.7 
+    export CRTVS=1.3.29138.7 
+    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-level-zero-gpu_${CRTVS}_amd64.deb
+    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb
+    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.3.18_amd64.deb
+#    export IGCV=2.5.6
+#    export IGCVV=2_${IGCV}+18417
+#    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/v${IGCV}/intel-igc-core-${IGCVV}_amd64.deb 
+#    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/v${IGCV}/intel-igc-opencl-${IGCVV}_amd64.deb 
+#    export CRTV=24.52.32224.5
+#    export CRTVS=1.6.32224.5
 # conflict with libze-intel-gpu1    
 #    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-level-zero-gpu_${CRTVS}_amd64.deb 
-    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb 
-    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.5_amd64.deb
+#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb 
+#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.5_amd64.deb
     dpkg -i *.deb && cd .. && rm -rf neo
  fi
-#    sudo apt-get install -y level-zero clinfo
 if [ $GPU = "nvidia" ]; then  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg ;\
  cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg ;\
  echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /' |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list ;\
@@ -551,7 +557,7 @@ export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:$ROCM_PATH/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/opt/intel/oneapi/compiler/latest/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/opt/intel/oneapi/umf/0.9/lib:/opt/intel/oneapi/tbb/latest/lib/intel64/gcc4.8:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/opt/intel/oneapi/umf/latest/lib:/opt/intel/oneapi/tbb/latest/lib/intel64/gcc4.8:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/opt/install/exachem/lib/exachem/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/opt/install/exachem/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/opt/install/exachem/lib/tamm/:$LD_LIBRARY_PATH
