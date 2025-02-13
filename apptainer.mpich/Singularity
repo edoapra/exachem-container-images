@@ -239,7 +239,7 @@ intel-oneapi-tbb-devel intel-oneapi-umf
 # conflict with libze-intel-gpu1    
 #    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-level-zero-gpu_${CRTVS}_amd64.deb 
 #    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb 
-    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.5_amd64.deb
+#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.5_amd64.deb
     dpkg -i *.deb && cd .. && rm -rf neo
  fi
 if [ $GPU = "nvidia" ]; then  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg ;\
