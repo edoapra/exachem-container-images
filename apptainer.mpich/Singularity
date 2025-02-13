@@ -18,8 +18,6 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     env|egrep SHELL
     ls -la  ${GITHUB_WORKSPACE}
     if [ -d ${GITHUB_WORKSPACE}/../../../cache ]; then export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache; else  export CACHEDIR=$(pwd)/cache; fi
-#    echo '@@@ ls -l $SINGULARITY_ROOTFS'
-#    ls -l ${SINGULARITY_ROOTFS}
     rm -f ${SINGULARITY_ROOTFS}/*.txt || true
     bash -c "if [[ -z '${GPU}' ]]; then echo 'GPU=nvidia ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; else echo 'GPU is ${GPU}'; echo 'GPU=${GPU} ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; fi"
     bash -c "if [[ -z '${CC}' ]]; then echo 'CC=gcc ' >> ${SINGULARITY_ROOTFS}/cc.txt ; else echo 'CC is ${CC}'; echo 'CC=${CC} ' >> ${SINGULARITY_ROOTFS}/cc.txt ; fi"
@@ -182,11 +180,6 @@ fi \
     TERM=dumb
     wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null 
     echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
-#     
-#    wget -O- https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor | tee /usr/share/keyrings/intel-graphics-archive-keyring.gpg > /dev/null
-#    echo "deb [signed-by=/usr/share/keyrings/intel-graphics-archive-keyring.gpg arch=amd64] https://repositories.intel.com/gpu/ubuntu jammy unified" > /etc/apt/sources.list.d/intel-graphics.list
-# https://dgpu-docs.intel.com/driver/installation.html#ubuntu
-#    apt-get install -y libze-intel-gpu1 libze1 libze-dev   
    wget -qO - https://repositories.intel.com/gpu/intel-graphics.key |  gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics.gpg
    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu jammy/lts/2350 unified" | \
     tee /etc/apt/sources.list.d/intel-gpu-jammy.list
@@ -216,30 +209,14 @@ intel-oneapi-tbb-devel intel-oneapi-umf
     export PKG_CONFIG_PATH=/opt/intel/oneapi/tbb/latest/lib/pkgconfig:${PKG_CONFIG_PATH}
 
     find /opt/intel/oneapi/ -name "*cmake"
-#    https://github.com/intel/compute-runtime
 # https://github.com/intel/compute-runtime
     mkdir neo && cd neo 
-    export IGCV=1.0.16510.2
     export IGCV=1.0.17537.20
     wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-core_${IGCV}_amd64.deb
     wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-opencl_${IGCV}_amd64.deb
     export CRTV=24.35.30872.22
-    export CRTVS=1.3.30872.22
-#    export CRTV=24.13.29138.7 
-#    export CRTVS=1.3.29138.7 
-#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-level-zero-gpu_${CRTVS}_amd64.deb
     wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb
     wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.0_amd64.deb
-#    export IGCV=2.5.6
-#    export IGCVV=2_${IGCV}+18417
-#    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/v${IGCV}/intel-igc-core-${IGCVV}_amd64.deb 
-#    wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/v${IGCV}/intel-igc-opencl-${IGCVV}_amd64.deb 
-#    export CRTV=24.52.32224.5
-#    export CRTVS=1.6.32224.5
-# conflict with libze-intel-gpu1    
-#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-level-zero-gpu_${CRTVS}_amd64.deb 
-#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb 
-#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.5_amd64.deb
     dpkg -i *.deb && cd .. && rm -rf neo
  fi
 if [ $GPU = "nvidia" ]; then  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg ;\
