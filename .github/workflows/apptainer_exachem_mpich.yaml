@@ -58,6 +58,18 @@ jobs:
               mpich_device: ch4:ofi
               ofi: builtin
               cc: gcc
+              ga_runtime: MPI_2SIDED
+              ubuntu: noble
+              gpu: cpu
+              exachem_branch: main
+              tamm_branch: main
+              folder: apptainer.mpich
+              scalapack: y
+              elpa: y
+            - mpich: 3.4.2
+              mpich_device: ch4:ofi
+              ofi: builtin
+              cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
               ubuntu: noble
               gpu: cpu
