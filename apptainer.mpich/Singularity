@@ -168,7 +168,7 @@ fi \
  && if [ $mpich_major = '4' ]; then
     apt-get -y install -y libpmix-bin libpmix-dev libpmix2
 else
-    apt-get -y install -y libpmi2-0-dev libpmi0-dev
+#    apt-get -y install -y libpmi2-0-dev libpmi0-dev
 fi \
 && export UBUNTU_CODE=$(lsb_release -c |cut -d : -f 2 | sed 's/\t//') \
 && echo UBUNTU_CODE is $UBUNTU_CODE \
