@@ -438,6 +438,11 @@ fi
 && wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch \
 && patch -p1 < mycmb.patch \
 && export NO_STOP_MESSAGE=1 \
+&& export ACLOCAL=aclocal \
+&& export AUTOMAKE=automake \
+&& export AUTOCONF=autoconf \
+&& export AUTOHEADER=autoheader \
+&& export MAKEINFO=makeinfo \
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC' "  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DDFT_CPU=ON " \
