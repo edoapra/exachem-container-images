@@ -58,7 +58,7 @@ jobs:
               mpich_device: ch4:ofi
               ofi: builtin
               cc: gcc
-              ga_runtime: MPI_2SIDED
+              ga_runtime: MPI_PROGRESS_THREAD
               ubuntu: noble
               gpu: cpu
               exachem_branch: main
@@ -418,7 +418,7 @@ jobs:
         mpirun --version || true
         export UCX_TLS=tcp,self
         export UCX_POSIX_USE_PROC_LINK=n
-        $MPIRUN_PATH -np 2 apptainer exec ${{ env.tag }}:${{ env.date }} \
+        timeout 5m $MPIRUN_PATH -np 2 apptainer exec ${{ env.tag }}:${{ env.date }} \
         /opt/install/exachem/bin/ExaChem \
         inputs/waterdft.json
         echo exit code is $?
