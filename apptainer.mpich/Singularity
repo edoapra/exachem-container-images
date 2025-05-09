@@ -485,7 +485,7 @@ fi
 	     rsync -av /opt/install /opt/exachem/build/stage/opt/. ; fi \
 &&             CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_BUILD_TYPE=Debug "\
 &&             CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_CXX_FLAGS_INIT="\""-fno-omit-frame-pointer -fsanitize=address -g -O0"\"" -DCMAKE_C_FLAGS_INIT="\""-fno-omit-frame-pointer -g -O0 -mno-avx512f -fsanitize=address"\"" -DCMAKE_Fortran_FLAGS_INIT="\""-fno-omit-frame-pointer -g -O0 -mno-avx512f -fsanitize=address"\"" -DMARCH_FLAGS="\"""\"" -DCMAKE_EXE_LINKER_FLAGS="\""-fsanitize=address"\"" "  \
-&& if [ ${GPU} = "intel_gpu_pvc" ]; then  CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_CXX_FLAGS="\"" -mtune=sapphirerapids -ffast-math -fsycl -fsycl-device-code-split=per_kernel -fsycl-targets=intel_gpu_pvc -sycl-std=2020"\""" \
+&& if [ ${GPU} = "intel_gpu_pvc" ]; then  CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_CXX_FLAGS="\"" -mtune=sapphirerapids -ffast-math -fsycl -fsycl-device-code-split=per_kernel -fsycl-targets=intel_gpu_pvc -sycl-std=2020"\""" ; fi\
 &&             export CMAKE_OPTIONS  \
 &&	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 && rm -f doit.sh \
