@@ -460,11 +460,14 @@ fi
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 && 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
+&& rm -f doit.sh \
 && if [ ${GPU} = "intel_gpu_pvc" ]; then  cmake  "$CMAKE_OPTIONS"  -DTAMM_CXX_FLAGS=" -mtune=sapphirerapids -ffast-math -fsycl -fsycl-device-code-split=per_kernel -fsycl-targets=intel_gpu_pvc -sycl-std=2020" .. || { echo "Cmake pvc failure";  exit 1; } ; \
 echo "modify Librett  repository to use"  ; \
 cat _deps/cmakebuild-src/cmake/build_external/BuildLibrett.cmake ; \
  patch -p0 < /tmp/usemylibrett.patch ; \
-else 	     USE_SCALAPACK="$USE_SCALAPACK" CC="$CC" CXX="$CXX" FC="$FC" cmake  "$CMAKE_OPTIONS" .. || { echo "Cmake failure"; exit 1; } ; fi \
+else 	  echo   "USE_SCALAPACK=$USE_SCALAPACK" CC=$CC CXX=$CXX FC=$FC \\" >>doit.sh ;  \
+echo "$CMAKE_OPTIONS  \\" >> doit.sh ; echo ".. " >>doit.sh ; \
+ 	     bash doit.sh || { echo "Cmake failure"; exit 1; } ; fi \
 &&             make -j3 || { echo "Compilation failure in tamm step";
                echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
 	    cat $(find /opt/TAMM/ -name config.log) || true ; \
