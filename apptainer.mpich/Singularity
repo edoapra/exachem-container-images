@@ -465,8 +465,9 @@ fi
 echo "modify Librett  repository to use"  ; \
 cat _deps/cmakebuild-src/cmake/build_external/BuildLibrett.cmake ; \
  patch -p0 < /tmp/usemylibrett.patch ; \
-else 	  echo   "USE_SCALAPACK=$USE_SCALAPACK" CC=$CC CXX=$CXX FC=$FC \\" >>doit.sh ;  \
-echo "$CMAKE_OPTIONS  \\" >> doit.sh ; echo ".. " >>doit.sh ; \
+else 	  echo   "USE_SCALAPACK=$USE_SCALAPACK CC=$CC CXX=$CXX FC=$FC \\" >>doit.sh ;  \
+   echo "cmake \\" >>doit.sh ; \
+   echo "$CMAKE_OPTIONS  \\" >> doit.sh ; echo ".. " >>doit.sh ; \
  	     bash doit.sh || { echo "Cmake failure"; exit 1; } ; fi \
 &&             make -j3 || { echo "Compilation failure in tamm step";
                echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
