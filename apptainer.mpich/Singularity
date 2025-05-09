@@ -442,7 +442,7 @@ fi
 && export AUTOHEADER=autoheader \
 && export MAKEINFO=makeinfo \
 && 	     mkdir build && cd build  \
-&&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES="\""CC"\"""  \
+&&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DDFT_CPU=ON" \
 &&             CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_BUILD_TYPE=Debug"\
 &&             CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_CXX_FLAGS="\""-fno-omit-frame-pointer -g -O0 -mno-avx512f"\"" -DTAMM_C_FLAGS="\""-fno-omit-frame-pointer -g -O0 -mno-avx512f"\"" -DTAMM_Fortran_FLAGS="\""-fno-omit-frame-pointer -g -O0 -mno-avx512f"\""" \
