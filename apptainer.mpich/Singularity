@@ -5,15 +5,11 @@ Stage: spython-base
 %arguments
    UBUNTU_VERSION=jammy
 
-%files
-    usemylibrett.patch /tmp/usemylibrett.patch
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
 %setup
     #!/bin/bash
-    cat usemylibrett.patch
-    cp usemylibrett.patch /tmp
     echo "$(readlink /proc/$$/exe) is the shell in use"
     env|egrep SHELL
     ls -la  ${GITHUB_WORKSPACE}
