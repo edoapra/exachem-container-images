@@ -406,6 +406,7 @@ jobs:
         mpirun --version || true
         export UCX_TLS=tcp,self
         export UCX_POSIX_USE_PROC_LINK=n
+        export ASAN_OPTIONS=allocator_may_return_null=1 
         timeout 5m $MPIRUN_PATH -np 2 apptainer exec ${{ env.tag }}:${{ env.date }} \
         /opt/install/exachem/bin/ExaChem \
         inputs/waterdft.json
