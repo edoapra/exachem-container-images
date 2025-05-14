@@ -385,7 +385,7 @@ jobs:
       run: |
         pwd
         ls -la
-        apptainer pull -F ${{ env.tag }}:${{ env.date }}
+        APPTAINER_DISABLE_CACHE=True apptainer pull -F ${{ env.tag }}:${{ env.date }}
         sudo apt-get install -y openmpi-bin libmpich-dev mpich
         mpirun --version || true
         ldd `which mpirun`
@@ -395,7 +395,7 @@ jobs:
       run: |
         pwd
         ls -la
-        apptainer pull -F ${{ env.tag }}:${{ env.date }}
+        APPTAINER_DISABLE_CACHE=True apptainer pull -F ${{ env.tag }}:${{ env.date }}
         sudo apt-get install -y openmpi-bin libmpich-dev mpich
         if [[ ${{ matrix.mpich }} == aurora ]]; then
            export MPIRUN_PATH=`which mpirun.openmpi`
