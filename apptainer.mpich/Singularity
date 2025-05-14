@@ -396,6 +396,9 @@ fi
 
  if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo '********' \
+&& if [ ! -z ${OFI} ]; then  \
+    if [ ${MPICH_DEVICE} = ch4:ofi ] && [ ${OFI} = git ]; then  apt-get install -y libjson-c-dev libcurl4-openssl-dev ; fi \
+    fi \
 && export PATH=$MPICH_DIR/bin:$PATH \
 && export PATH=/opt/intel/oneapi/compiler/latest/bin:$PATH \
 && export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH \
