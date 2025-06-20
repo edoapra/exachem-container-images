@@ -488,7 +488,6 @@ fi
 &&             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; }  \
 &&	     echo exit code for compilation $?  \
 &&             make install  \
-&&            cp EXACHEM_Methods_External-prefix/src/EXACHEM_Methods_External-build/libcmsb_gpulib_ExaChem.so  /opt/install/exachem/lib/exachem/. \
 &&	     echo exit code for make install $?  \
 &&	     bash -c "if [[ -f /opt/install/exachem/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi"  \
 &&	     echo git describe --always `git describe --always`  >> /opt/install/info.txt \
