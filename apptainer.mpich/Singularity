@@ -544,14 +544,14 @@ rm -f az_ecp
 tail -n $linem1 $1 > az_ecp
 mv az_ecp $1
 }
-ecp_strip aug-cc-pvdz-pp.ecp
-ecp_strip aug-cc-pvtz-pp.ecp
-ecp_strip aug-cc-pvqz-pp.ecp
-ecp_strip aug-cc-pv5z-pp.ecp
-ecp_strip aug-cc-pwcvdz-pp.ecp
-ecp_strip aug-cc-pwcvtz-pp.ecp
-ecp_strip aug-cc-pwcvqz-pp.ecp
-ecp_strip aug-cc-pwcv5z-pp.ecp
+ao_strip aug-cc-pvdz-pp.ecp
+ao_strip aug-cc-pvtz-pp.ecp
+ao_strip aug-cc-pvqz-pp.ecp
+ao_strip aug-cc-pv5z-pp.ecp
+ao_strip aug-cc-pwcvdz-pp.ecp
+ao_strip aug-cc-pwcvtz-pp.ecp
+ao_strip aug-cc-pwcvqz-pp.ecp
+ao_strip aug-cc-pwcv5z-pp.ecp
 
              echo 'clean unnecessary packages ' \
             && DEBIAN_FRONTEND=noninteractive apt-get -q=2 -y install localepurge \
