@@ -155,13 +155,12 @@ RUN         apt-get -q=2 update \
 	    && wget   --progress=dot:giga -O  aug-cc-pvtz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget   --progress=dot:giga -O  aug-cc-pvqz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget   --progress=dot:giga -O  aug-cc-pv5z-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
-&& ecp_strip(){
-line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
+&& ecp_strip(){ \
+&& line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
 && linem1=$((line-2)) \
 && rm -f az_ecp \
 && head -n $linem1 $1 > az_ecp \
-&& mv az_ecp $1
-}  \
+&& mv az_ecp $1}  \
 && ecp_strip aug-cc-pvdz-pp.g94 \
 && ecp_strip aug-cc-pvtz-pp.g94 \
 && ecp_strip aug-cc-pvqz-pp.g94 \
@@ -178,14 +177,13 @@ line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
 	    && wget  --progress=dot:giga -O  aug-cc-pvtz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget  --progress=dot:giga -O  aug-cc-pvqz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget  --progress=dot:giga -O  aug-cc-pv5z-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
-&& ao_strip(){
-line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
+&& ao_strip(){ \
+&&line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
 &&    length=$(wc -l $1 | cut -d ' ' -f 1) \
 && linem1=$((length-line+1)) \
 && rm -f az_ecp \
 && tail -n $linem1 $1 > az_ecp \
-&& mv az_ecp $1
-} \
+&& mv az_ecp $1} \
 && ao_strip aug-cc-pvdz-pp.ecp \
 && ao_strip aug-cc-pvtz-pp.ecp \
 && ao_strip aug-cc-pvqz-pp.ecp \
