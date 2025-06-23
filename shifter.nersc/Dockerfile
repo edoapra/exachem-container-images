@@ -49,7 +49,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN         apt-get -q=2 update \
             && apt-get -q=2 -y upgrade \
             && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION"   make ssh patch rsync wget curl git file python"$PY_VERSION" libpython"$PY_VERSION"-dev python"$PY_VERSION"-dev bzip2 tar gnupg2 cmake \
-            && apt-get install -q=2 -y  autoconf automake libtool git \
+            && apt-get install -q=2 -y  autoconf automake libtool git  gdb \
 	    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
 	    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
 	    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
@@ -143,6 +143,57 @@ RUN         apt-get -q=2 update \
 	    && echo exit code for make install $? \
 	    && echo git describe --always `git describe --always`  >> /opt/install/info.txt \
 	    && echo git rev-parse HEAD git `git rev-parse HEAD` >> /opt/install/info.txt \
+	    && cd /opt/install/exachem/share/libint/*/basis/ \
+	    && wget   --progress=dot:giga -O aug-cc-pvdz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvdz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O aug-cc-pvtz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvtz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O aug-cc-pvqz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pwcvdz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pwcvtz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pwcvqz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pwcv5z-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pvdz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pvtz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pvqz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget   --progress=dot:giga -O  aug-cc-pv5z-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+&& ecp_strip(){
+line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
+&& linem1=$((line-2)) \
+&& rm -f az_ecp \
+&& head -n $linem1 $1 > az_ecp \
+&& mv az_ecp $1
+}  \
+&& ecp_strip aug-cc-pvdz-pp.g94 \
+&& ecp_strip aug-cc-pvtz-pp.g94 \
+&& ecp_strip aug-cc-pvqz-pp.g94 \
+&& ecp_strip aug-cc-pv5z-pp.g94 \
+&& ecp_strip aug-cc-pwcvdz-pp.g94 \
+&& ecp_strip aug-cc-pwcvtz-pp.g94 \
+&& ecp_strip aug-cc-pwcvqz-pp.g94 \
+&& ecp_strip aug-cc-pwcv5z-pp.g94 \
+&& 	     wget  --progress=dot:giga -O  aug-cc-pwcvdz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pwcvtz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pwcvqz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pwcv5z-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pvdz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pvtz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pvqz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+	    && wget  --progress=dot:giga -O  aug-cc-pv5z-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+&& ao_strip(){
+line=$(grep -hni ecp $1|head -1|cut -d : -f 1) \
+&&    length=$(wc -l $1 | cut -d ' ' -f 1) \
+&& linem1=$((length-line+1)) \
+&& rm -f az_ecp \
+&& tail -n $linem1 $1 > az_ecp \
+&& mv az_ecp $1
+} \
+&& ao_strip aug-cc-pvdz-pp.ecp \
+&& ao_strip aug-cc-pvtz-pp.ecp \
+&& ao_strip aug-cc-pvqz-pp.ecp \
+&& ao_strip aug-cc-pv5z-pp.ecp \
+&& ao_strip aug-cc-pwcvdz-pp.ecp \
+&& ao_strip aug-cc-pwcvtz-pp.ecp \
+&& ao_strip aug-cc-pwcvqz-pp.ecp \
+&& ao_strip aug-cc-pwcv5z-pp.ecp  \
 	    && echo 'caching libint' \
 	    && cd /opt/install/exachem/ \
 	    && if [[ $FETCHED_LIBINT == 1 ]]; then rm -f /opt/cache/libint.tar.bz2 || true; else tar cjvf /opt/cache/libint.tar.bz2 ./include/libint* ./share/libint* ./lib/pkgconfig/libint*.pc ./lib/cmake/libint* ./lib/libint*  || true ; fi  \
