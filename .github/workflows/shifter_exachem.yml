@@ -147,6 +147,11 @@ jobs:
         if: ${{ env.push_truefalse == 'true' }}
         run: |
           sleep 30s
+          systemctl stop docker
+          systemctl stop docker.socket
+          rm -rf /var/lib/docker /home/docker
+          systemctl start docker
+          df -h
           docker pull ${{ env.tag }}
           export MYLDPATH=/usr/local/lib:/opt/lib
           docker run -e LD_LIBRARY_PATH="$MYLDPATH" --entrypoint=ldd --rm \
