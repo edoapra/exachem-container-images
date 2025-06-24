@@ -146,11 +146,11 @@ jobs:
       - name: load and test image
         if: ${{ env.push_truefalse == 'true' }}
         run: |
-          sleep 30s
-          systemctl stop docker
-          systemctl stop docker.socket
-          rm -rf /var/lib/docker /home/docker
-          systemctl start docker
+          sleep 10s
+          sudo systemctl stop docker
+          sudo systemctl stop docker.socket
+          sudo rm -rf /var/lib/docker /home/docker
+          sudo systemctl start docker
           df -h
           docker pull ${{ env.tag }}
           export MYLDPATH=/usr/local/lib:/opt/lib
