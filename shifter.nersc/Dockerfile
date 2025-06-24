@@ -47,21 +47,22 @@ ENV	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"
 	    LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib  
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+RUN mkdir -p /opt
 RUN <<EOF
-echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " > ecp_strip.sh
-echo " linem1=\$((line-2)) " >> ecp_strip.sh
-echo " rm -f az_ecp " >> ecp_strip.sh
-echo " head -n \$linem1 \$1 > az_ecp " >> ecp_strip.sh
-echo " mv az_ecp \$1 " >> ecp_strip.sh
+echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " > /opt/ecp_strip.sh
+echo " linem1=\$((line-2)) " >> /opt/ecp_strip.sh
+echo " rm -f az_ecp " >> /opt/ecp_strip.sh
+echo " head -n \$linem1 \$1 > az_ecp " >> /opt/ecp_strip.sh
+echo " mv az_ecp \$1 " >> /opt/ecp_strip.sh
 EOF
 
 RUN <<EOF
-echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " > ao_strip.sh
-echo " length=$(wc -l \$1 | cut -d ' ' -f 1) " >> ao_strip.sh
-echo " linem1=\$((length-line+1)) " >> ao_strip.sh
-echo " rm -f az_ecp " >> ao_strip.sh
-echo " head -n \$linem1 \$1 > az_ecp " >> ao_strip.sh
-echo " mv az_ecp \$1" >> ao_strip.sh
+echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " > /opt/ao_strip.sh
+echo " length=$(wc -l \$1 | cut -d ' ' -f 1) " >> /opt/ao_strip.sh
+echo " linem1=\$((length-line+1)) " >> /opt/ao_strip.sh
+echo " rm -f az_ecp " >> /opt/ao_strip.sh
+echo " head -n \$linem1 \$1 > az_ecp " >> /opt/ao_strip.sh
+echo " mv az_ecp \$1" >> /opt/ao_strip.sh
 EOF
 
 RUN         apt-get -q=2 update \
@@ -73,7 +74,7 @@ RUN         apt-get -q=2 update \
 	    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
 	    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 100 \
 	    && update-alternatives --install /usr/bin/python3-config python3-config /usr/bin/python3.11-config 100 \
-           && export FETCHED_LIBINT=0 \
+            && export FETCHED_LIBINT=0 \
 	    && export FETCHED_MPICH=0 \
 	    && if [[ -z "${FC}" ]]; then export FC=gfortran ; fi \
 	    && echo FCFCFC is $FC >& nvcc.out && cat nvcc.out && rm nvcc.out \
@@ -173,15 +174,15 @@ RUN         apt-get -q=2 update \
 	    && wget   --progress=dot:giga -O  aug-cc-pvtz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget   --progress=dot:giga -O  aug-cc-pvqz-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget   --progress=dot:giga -O  aug-cc-pv5z-pp.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/gaussian94/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
-&& chmod +x ecp_strip.sh \
-&& ./ecp_strip.sh aug-cc-pvdz-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pvtz-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pvqz-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pv5z-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pwcvdz-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pwcvtz-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pwcvqz-pp.g94  \
-&& ./ecp_strip.sh aug-cc-pwcv5z-pp.g94  \
+&& chmod +x /opt/ecp_strip.sh \
+&& /opt/ecp_strip.sh aug-cc-pvdz-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pvtz-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pvqz-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pv5z-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pwcvdz-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pwcvtz-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pwcvqz-pp.g94  \
+&& /opt/ecp_strip.sh aug-cc-pwcv5z-pp.g94  \
 && 	     wget  --progress=dot:giga -O  aug-cc-pwcvdz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget  --progress=dot:giga -O  aug-cc-pwcvtz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget  --progress=dot:giga -O  aug-cc-pwcvqz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pwcvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
@@ -192,15 +193,15 @@ RUN         apt-get -q=2 update \
 	    && wget  --progress=dot:giga -O  aug-cc-pv5z-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true"
 
 
-RUN chmod +x ao_strip.sh \
-&& ./ao_strip aug-cc-pvdz-pp.ecp \
-&& ./ao_strip aug-cc-pvtz-pp.ecp \
-&& ./ao_strip aug-cc-pvqz-pp.ecp \
-&& ./ao_strip aug-cc-pv5z-pp.ecp \
-&& ./ao_strip aug-cc-pwcvdz-pp.ecp \
-&& ./ao_strip aug-cc-pwcvtz-pp.ecp \
-&& ./ao_strip aug-cc-pwcvqz-pp.ecp \
-&& ./ao_strip aug-cc-pwcv5z-pp.ecp  \
+RUN chmod +x /opt/ao_strip.sh \
+&& /opt/ao_strip.sh aug-cc-pvdz-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pvtz-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pvqz-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pv5z-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pwcvdz-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pwcvtz-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pwcvqz-pp.ecp \
+&& /opt/ao_strip.sh aug-cc-pwcv5z-pp.ecp  \
 	    && echo 'caching libint' \
 	    && cd /opt/install/exachem/ \
 	    && if [[ $FETCHED_LIBINT == 1 ]]; then rm -f /opt/cache/libint.tar.bz2 || true; else tar cjvf /opt/cache/libint.tar.bz2 ./include/libint* ./share/libint* ./lib/pkgconfig/libint*.pc ./lib/cmake/libint* ./lib/libint*  || true ; fi  \
