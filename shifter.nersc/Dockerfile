@@ -220,7 +220,6 @@ RUN chmod +x /opt/ao_strip.sh \
             && apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean \
 	    && apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcufft-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcufft-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcusolver-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcusparse-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libnpp-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcurand-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-nvrtc-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR"  libcufile-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" || true ; rm -f /usr/local/cuda-*/targets/x86_64-linux/lib/*static*a || true \
 && rm -rf /opt/TAMM  \
-&& rm -rf /opt/cache  \
 && rm -rf /opt/exachem/build \
 && rm -rf /opt/install/exachem/bin/xc-info /opt/install/exachem/bin/h5* \
 && rm -rf /opt/install/exachem/lib/lib*a \
