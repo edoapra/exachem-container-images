@@ -191,10 +191,8 @@ RUN         apt-get -q=2 update \
 	    && wget  --progress=dot:giga -O  aug-cc-pvdz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget  --progress=dot:giga -O  aug-cc-pvtz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
 	    && wget  --progress=dot:giga -O  aug-cc-pvqz-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
-	    && wget  --progress=dot:giga -O  aug-cc-pv5z-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true"
-
-
-RUN chmod +x /opt/ao_strip.sh \
+	    && wget  --progress=dot:giga -O  aug-cc-pv5z-pp.ecp "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz-pp/format/nwchem/?version=0&elements=29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86&optimize_general=true&uncontract_general=true" \
+&& chmod +x /opt/ao_strip.sh \
 && /opt/ao_strip.sh aug-cc-pvdz-pp.ecp \
 && /opt/ao_strip.sh aug-cc-pvtz-pp.ecp \
 && /opt/ao_strip.sh aug-cc-pvqz-pp.ecp \
@@ -223,6 +221,7 @@ RUN chmod +x /opt/ao_strip.sh \
 && rm -rf /opt/exachem/build \
 && rm -rf /opt/install/exachem/bin/xc-info /opt/install/exachem/bin/h5* \
 && rm -rf /opt/install/exachem/lib/lib*a \
+&& rm -rf /cmake* \
 && du -sk /opt/*|sort -n \
 && echo "dddddddddddd"  \
 && dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 50 \
