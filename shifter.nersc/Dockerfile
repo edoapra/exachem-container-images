@@ -58,7 +58,7 @@ EOF
 
 RUN <<EOF
 echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " > /opt/ao_strip.sh
-echo " length=$(wc -l \$1 | cut -d ' ' -f 1) " >> /opt/ao_strip.sh
+echo " length=\$(wc -l \$1 | cut -d ' ' -f 1) " >> /opt/ao_strip.sh
 echo " linem1=\$((length-line+1)) " >> /opt/ao_strip.sh
 echo " rm -f az_ecp " >> /opt/ao_strip.sh
 echo " head -n \$linem1 \$1 > az_ecp " >> /opt/ao_strip.sh
@@ -222,7 +222,7 @@ RUN chmod +x /opt/ao_strip.sh \
 && rm -rf /opt/TAMM  \
 && rm -rf /opt/cache  \
 && rm -rf /opt/exachem/build \
-&& rm -rf /opt/install/exachem/bin/xc-info \
+&& rm -rf /opt/install/exachem/bin/xc-info /opt/install/exachem/bin/h5* \
 && rm -rf /opt/install/exachem/lib/lib*a \
 && du -sk /opt/*|sort -n \
 && echo "dddddddddddd"  \
