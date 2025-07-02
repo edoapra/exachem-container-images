@@ -20,7 +20,7 @@ jobs:
         fail-fast: false
         matrix:
           folder:
-            - podman.nersc
+            - podmanhpc.nersc
           branch: [main]
           fc: [ gfortran]
           sysv:
