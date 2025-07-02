@@ -116,7 +116,7 @@ jobs:
           else
               echo "docker tar not found found"
               cd ${{ matrix.folder }}
-              docker build -t $ubuntu_tag -f Dockerfile.ubuntu .
+              docker build -t $ubuntu_tag -f ../shifter.nersc/Dockerfile.ubuntu .
               mkdir -p ~/cache
               docker save -o ~/cache/myubuntu_jammy.tar $ubuntu_tag
               docker images
