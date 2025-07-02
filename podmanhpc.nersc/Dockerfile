@@ -46,7 +46,7 @@ ENV	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN           if [[ "${CONTAINER}" == "shifter" ]]; then groupadd -r exachem -g 1994 ;\
               useradd  -u 1994 -r -g exachem -c 'Exachem user' -m -d /opt/install/exachem -s /bin/bash exachem ; fi && \
-            if [[ "${CONTAINER}" == "shifter" ]]; then export MYUSER=exachem ; else export MYUSER=root ;fi \
+            if [[ "${CONTAINER}" == "shifter" ]]; then export MYUSER=exachem ; else export MYUSER=root ;fi && \
     mkdir -p /opt \
 && { echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " ; \
 echo " linem1=\$((line-2)) " ; \
