@@ -1,0 +1,173 @@
+name: exachem_podman
+
+on:
+  schedule:
+    - cron: '0 0 * * SUN'
+  pull_request:
+  repository_dispatch:
+    types: [backend_automation]
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  podman_job:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    strategy:
+        fail-fast: false
+        matrix:
+          folder:
+            - podman.nersc
+          branch: [main]
+          fc: [ gfortran]
+          sysv:
+            - Y
+            - N
+          cpu:
+            - N
+            - Y
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: pkg cleanup
+        uses: edoapra/ubuntu-pkg-cleanup@main
+      - name:  cache key
+        run: |
+          echo "cache_key=${{ matrix.folder }}-${{ matrix.branch }}${{ env.fc }}-cache-v000" >> $GITHUB_ENV
+      - name: Setup cache
+        id: setup-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/cache
+          key: ${{ env.cache_key }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: image version tag
+        run: |
+          extratag=""
+          if [[ ${{ matrix.sysv }} ==  Y ]]; then extratag+="_sysv" ;fi
+          if [[ ${{ matrix.cpu }} ==  Y ]]; then extratag+="_cpu" ;fi
+          echo "extratag is $extratag"
+          if [[ ${{ matrix.branch }} ==  main ]]; then
+          echo "longnwversion=${{ matrix.folder }}$extratag" >> $GITHUB_ENV
+          else
+          echo "longnwversion=${{ matrix.folder }}$extratag${{ matrix.branch }}" >> $GITHUB_ENV
+          fi
+        shell: bash
+      - name: docker tag
+        id: docker-tag
+        run: |
+          echo "tag=ghcr.io/${{ github.repository }}/${{ env.longnwversion}}" | tr '[:upper:]' '[:lower:]' >>  $GITHUB_ENV
+        shell: bash
+      - name: push_false
+        id: push_false
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "push_truefalse=false" >> $GITHUB_ENV
+      - name: push_true
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          echo "push_truefalse=true" >> $GITHUB_ENV
+        shell: bash
+      - name: Login to GitHub Container Registry
+        if: ${{ env.push_truefalse == 'true' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: fetch cache
+        if: (steps.setup-cache.outputs.cache-hit == 'true')
+        run: |
+          cd ${{ matrix.folder }}
+          ls -lrta
+          if [[ -f ~/cache/libint.tar.bz2 ]]; then \
+          echo "libext cache present" ; \
+          mkdir -p cache|| true ; \
+          rsync -av ~/cache/libint* cache/. ; \
+          echo "libint cache fetched" ; \
+          fi
+          if [[ -f ~/cache/mpich.tar.bz2 ]]; then \
+          echo "mpich cache present" ; \
+          mkdir -p cache|| true ; \
+          rsync -av ~/cache/mpich* cache/. ; \
+          echo "mpich cache fetched" ; \
+          ls -l cache/ ; \
+          echo "======" ; \
+          fi
+      - name: docker ubuntu tag
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "ubuntu_tag=ubuntu:jammy" >> $GITHUB_ENV
+      - name: save docker ubuntu image
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          ubuntu_tag=$(echo ghcr.io/${{ github.repository }}/ubuntu:latest| tr '[:upper:]' '[:lower:]')
+          echo "ubuntu_tag=$ubuntu_tag" >> $GITHUB_ENV
+          if [  -f ~/cache/myubuntu_jammy.tar ]; then
+              echo "docker tar found"
+              docker load -i ~/cache/myubuntu_jammy.tar
+              docker images
+          else
+              echo "docker tar not found found"
+              cd ${{ matrix.folder }}
+              docker build -t $ubuntu_tag -f Dockerfile.ubuntu .
+              mkdir -p ~/cache
+              docker save -o ~/cache/myubuntu_jammy.tar $ubuntu_tag
+              docker images
+          fi
+          docker push $ubuntu_tag
+      - name: builddate
+        id: build-date
+        run: |
+          echo "date=$(TZ=America/Los_Angeles date +%Y%m%d_%H%M%S)" >> $GITHUB_ENV
+      - name: build_docker
+        uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_SUMMARY: false
+        with:
+          push:  ${{ env.push_truefalse }}
+          context: ${{ matrix.folder }}
+          tags: |
+            ${{ env.tag }}:latest
+            ${{ env.tag }}:${{ env.date }}
+          build-args: |
+            FC=${{ matrix.fc }}
+            USE_SYSV=${{ matrix.sysv }}
+            USE_CPU=${{ matrix.cpu }}
+            CACHE_HIT=${{ env.cache_hit }}
+            GITHUB_REPOSITORY_OWNER=${{ github.repository_owner }}
+            GITHUB_REPOSITORY=${{ github.repository }}
+            UBUNTU_TAG=${{ env.ubuntu_tag }}
+            TAMM_BRANCH=${{ matrix.branch }}
+      - name: load and test image
+        if: ${{ env.push_truefalse == 'true' }}
+        run: |
+          sleep 10s
+          sudo systemctl stop docker
+          sudo systemctl stop docker.socket
+          sudo rm -rf /var/lib/docker /home/docker
+          sudo systemctl start docker
+          df -h
+          docker pull ${{ env.tag }}
+          export MYLDPATH=/usr/local/lib:/opt/lib
+          docker run -e LD_LIBRARY_PATH="$MYLDPATH" --entrypoint=ldd --rm \
+          ${{ env.tag }} /opt/install/exachem/bin/ExaChem
+      - name: store cache
+        if: ${{ env.push_truefalse == 'true' }}
+        run: |
+            mkdir -p ~/cache/
+            docker run --privileged --user 0 --rm \
+            --entrypoint='/bin/cp' -v ~/cache:/data \
+            ${{ env.tag }} \
+            -rp /opt/cache/libint.tar.bz2 /data/.  || true
+            docker run --privileged --user 0 --rm \
+            --entrypoint='/bin/cp' -v ~/cache:/data \
+            ${{ env.tag }} \
+            -rp /opt/cache/mpich.tar.bz2 /data/.  || true
+            ls -Ralrt ~/cache || true
