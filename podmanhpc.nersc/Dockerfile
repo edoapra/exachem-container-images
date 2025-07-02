@@ -1,3 +1,4 @@
+ARG         CONTAINER
 ARG         UBUNTU_TAG
 ARG         GITHUB_REPOSITORY_OWNER
 ARG         GITHUB_REPOSITORY
@@ -7,13 +8,12 @@ FROM $UBUNTU_TAG
 
 LABEL maintainer="Edoardo Apra <edoardo.apra@pnnl.gov>"
 
-LABEL org.opencontainers.image.description "Exachem CC Podman image built with Mpich 4.0"
+LABEL org.opencontainers.image.description "Exachem CC"$CONTAINER"image built with Mpich 4.0"
 
 #LABEL org.opencontainers.image.source "https://github.com/Exachem/exachem-container-images"
 
 LABEL org.opencontainers.image.licenses "Apache-2.0"
 
-#create user exachem
 
 #caching from host cache dir
 COPY Dockerfile cache* /tmp/
@@ -44,8 +44,10 @@ ENV         PY_VERSION=3.11
 ENV	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:/opt/nwchem/bin:/usr/local/bin \
 	    LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib  
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-RUN mkdir -p /opt \
+RUN           if [[ "${CONTAINER}" == "shifter" ]]; then groupadd -r exachem -g 1994 ;\
+              useradd  -u 1994 -r -g exachem -c 'Exachem user' -m -d /opt/install/exachem -s /bin/bash exachem ; fi && \
+            if [[ "${CONTAINER}" == "shifter" ]]; then export MYUSER=exachem ; else export MYUSER=root ;fi \
+    mkdir -p /opt \
 && { echo "line=\$(grep -hni ecp \$1|head -1|cut -d : -f 1) " ; \
 echo " linem1=\$((line-2)) " ; \
 echo " rm -f az_ecp " ; \

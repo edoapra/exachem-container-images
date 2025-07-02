@@ -21,14 +21,15 @@ jobs:
         matrix:
           folder:
             - podmanhpc.nersc
-          branch: [main]
+          branch: [ main ]
           fc: [ gfortran]
-          sysv:
-            - Y
-            - N
+          sysv: [ N ]
           cpu:
             - N
             - Y
+          container:
+            - shifter
+            - podman
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -139,6 +140,7 @@ jobs:
           build-args: |
             FC=${{ matrix.fc }}
             USE_SYSV=${{ matrix.sysv }}
+            CONTAINER=${{ matrix.container }}
             USE_CPU=${{ matrix.cpu }}
             CACHE_HIT=${{ env.cache_hit }}
             GITHUB_REPOSITORY_OWNER=${{ github.repository_owner }}
