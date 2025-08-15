@@ -248,6 +248,8 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 &&              if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "Y" \) ]; then echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	" ; fi  \
 &&              if [ ${ELPA} = "Y" ]; then echo "ELPA enabled "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON" ; fi  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
+&&              echo "modify ga repository to use" \
+&&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_REPO='https://github.com/edoapra/ga.git' -DGA_TAG='fixdevshm'"    \
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 && 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
