@@ -459,7 +459,7 @@ fi
 &&   echo "cmake \\" >>doit.sh  \
 &&   echo "$CMAKE_OPTIONS  \\" >> doit.sh ; echo ".. " >>doit.sh  \
 &&    bash doit.sh || { echo "Cmake failure"; exit 1; }  \
-&&             make -j3 || { echo "Compilation failure in tamm step";
+&&             make -j1 -l0.001 || { echo "Compilation failure in tamm step";
                echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
 	    cat $(find /opt/TAMM/ -name config.log) || true ; \
 	    cat $(find /opt/TAMM/ -name CMakeCache.txt) || true ; \
