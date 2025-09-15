@@ -439,7 +439,6 @@ fi
 &&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
 && export NO_STOP_MESSAGE=1 \
-&& export CMAKE_BUILD_PARALLEL_LEVEL=1 \
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGCCROOT=/usr" \
