@@ -100,8 +100,7 @@ export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
 if [ ${GPU} = "nvidia" ]; then
-if [ $GPU_ARCH -gt 70 ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=4; \
-else export CUDA_VERSION_MAJOR=11 ; export CUDA_VERSION_MINOR=7 ; fi
+export CUDA_VERSION_MAJOR=11 ; export CUDA_VERSION_MINOR=7 
 echo CUDA $CUDA_VERSION_MAJOR $CUDA_VERSION_MINOR
 fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
