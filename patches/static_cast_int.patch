@@ -1,8 +1,8 @@
 diff --git a/exachem/scf/scf_common.cpp b/exachem/scf/scf_common.cpp
-index 2c27c8f..749e78f 100644
+index 2c27c8f..6503b1d 100644
 --- a/exachem/scf/scf_common.cpp
 +++ b/exachem/scf/scf_common.cpp
-@@ -95,14 +95,14 @@ std::tuple<size_t, double, double> exachem::scf::SCFUtil::gensqrtinv(
+@@ -95,16 +95,16 @@ std::tuple<size_t, double, double> exachem::scf::SCFUtil::gensqrtinv(
        auto [na_rows, na_cols] = (*blockcyclic_dist).get_local_dims(N, N);
  
        // Set parameters
@@ -22,8 +22,11 @@ index 2c27c8f..749e78f 100644
 +      elpa_set(handle, "process_row", static_cast<int>(grid.ipr()), &error);
 +      elpa_set(handle, "process_col", static_cast<int>(grid.ipc()), &error);
  #if defined(USE_CUDA)
-       elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
+-      elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
++      elpa_set(handle, "nvidia-gpu", static_cast<int>(1), &error);
        // elpa_set(handle, "use_gpu_id", 1, &error);
+ #endif
+       error = elpa_setup(handle);
 @@ -412,4 +412,4 @@ template std::tuple<Matrix, size_t, double, double> exachem::scf::SCFUtil::gensq
    double threshold);
  template std::tuple<size_t, double, double> exachem::scf::SCFUtil::gensqrtinv<double>(
@@ -32,10 +35,10 @@ index 2c27c8f..749e78f 100644
 \ No newline at end of file
 +  TAMMTensors<double>& ttensors, bool symmetric, double threshold);
 diff --git a/exachem/scf/scf_guess.cpp b/exachem/scf/scf_guess.cpp
-index 368ecc5..4636333 100644
+index 368ecc5..02740bc 100644
 --- a/exachem/scf/scf_guess.cpp
 +++ b/exachem/scf/scf_guess.cpp
-@@ -681,12 +681,12 @@ void exachem::scf::SCFGuess<T>::scf_diagonalize(Scheduler& sch, const ChemEnv& c
+@@ -681,14 +681,14 @@ void exachem::scf::SCFGuess<T>::scf_diagonalize(Scheduler& sch, const ChemEnv& c
        // Set parameters
        elpa_set(handle, "na", Northo, &error);
        elpa_set(handle, "nev", Northo, &error);
@@ -51,9 +54,12 @@ index 368ecc5..4636333 100644
 +      elpa_set(handle, "process_row", static_cast<int>(grid.ipr()), &error);
 +      elpa_set(handle, "process_col", static_cast<int>(grid.ipc()), &error);
  #if defined(USE_CUDA)
-       elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
+-      elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
++      elpa_set(handle, "nvidia-gpu", static_cast<int>(1), &error);
        // elpa_set(handle, "use_gpu_id", 1, &error);
-@@ -773,12 +773,12 @@ void exachem::scf::SCFGuess<T>::scf_diagonalize(Scheduler& sch, const ChemEnv& c
+ #endif
+       error = elpa_setup(handle);
+@@ -773,14 +773,14 @@ void exachem::scf::SCFGuess<T>::scf_diagonalize(Scheduler& sch, const ChemEnv& c
          // Set parameters
          elpa_set(handle, "na", Northo, &error);
          elpa_set(handle, "nev", Northo, &error);
@@ -69,8 +75,11 @@ index 368ecc5..4636333 100644
 +        elpa_set(handle, "process_row", static_cast<int>(grid.ipr()), &error);
 +        elpa_set(handle, "process_col", static_cast<int>(grid.ipc()), &error);
  #if defined(USE_CUDA)
-         elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
+-        elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
++        elpa_set(handle, "nvidia-gpu", static_cast<int>(1), &error);
          // elpa_set(handle, "use_gpu_id", 1, &error);
+ #endif
+         error = elpa_setup(handle);
 @@ -1633,4 +1633,4 @@ void exachem::scf::SCFGuess<T>::t2e_hf_helper(const ExecutionContext& ec, tamm::
    Hbufv.shrink_to_fit();
  }
@@ -79,10 +88,10 @@ index 368ecc5..4636333 100644
 \ No newline at end of file
 +template class exachem::scf::SCFGuess<double>;
 diff --git a/exachem/scf/scf_iter.cpp b/exachem/scf/scf_iter.cpp
-index 2243af9..d35108a 100644
+index 2243af9..20002b8 100644
 --- a/exachem/scf/scf_iter.cpp
 +++ b/exachem/scf/scf_iter.cpp
-@@ -619,12 +619,12 @@ void exachem::scf::SCFIter<T>::init_ri(ExecutionContext& ec, const ChemEnv& chem
+@@ -619,14 +619,14 @@ void exachem::scf::SCFIter<T>::init_ri(ExecutionContext& ec, const ChemEnv& chem
        // Set parameters
        elpa_set(handle, "na", ndf, &error);
        elpa_set(handle, "nev", ndf, &error);
@@ -98,5 +107,8 @@ index 2243af9..d35108a 100644
 +      elpa_set(handle, "process_row", static_cast<int> (grid.ipr()), &error);
 +      elpa_set(handle, "process_col", static_cast<int> (grid.ipc()), &error);
  #if defined(USE_CUDA)
-       elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
+-      elpa_set(handle, "nvidia-gpu", static_cast<int> 1, &error);
++      elpa_set(handle, "nvidia-gpu", static_cast<int>(1), &error);
        // elpa_set(handle, "use_gpu_id", 1, &error);
+ #endif
+       error = elpa_setup(handle);
