@@ -55,15 +55,12 @@ echo 'GPU=nvidia ' >  gpu.txt  ; fi"
 export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
-if [ ${GPU} = "nvidia" ]; then
-if [ ${GPU_ARCH} = "90" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=0; \
-else export CUDA_VERSION_MAJOR=11 ; export CUDA_VERSION_MINOR=7 ; fi
-fi
+if [ ${GPU} = "nvidia" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=4;fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
 echo GPU is $GPU
-export GCC_VERSION=11
+export GCC_VERSION=12
 export EXACHEM_BRANCH=main
 export TAMM_BRANCH=main
 
