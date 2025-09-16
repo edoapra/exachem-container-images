@@ -132,6 +132,7 @@ jobs:
           pwd
           ls -lrta
           cp patches/myaug.patch shifter.nersc
+          cp patches/static_cast_int.patch shifter.nersc
           ls -lrta shifter.nersc
       - name: build_docker
         uses: docker/build-push-action@v6

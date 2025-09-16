@@ -17,6 +17,7 @@ LABEL org.opencontainers.image.licenses "Apache-2.0"
 #caching from host cache dir
 COPY Dockerfile cache* /tmp/
 COPY myaug.patch /tmp/
+COPY static_cast_int.patch /tmp/
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USE_OPENMP_VALUE
@@ -157,6 +158,7 @@ cat /opt/ao_strip.sh && \
 	    && echo exit code for make install $? \
             && cd /opt/exachem \
 	    && patch -p1 -s -N < /tmp/myaug.patch \
+	    && patch -p1 -s -N < /tmp/static_cast_int.patch \
 	    && mkdir build && cd build \
 	    && CC=gcc CXX=g++ FC=gfortran cmake  $CMAKE_OPTIONS .. \
             && make -j3 || { echo 'exachem Compilation Failure'; exit 1; }  \

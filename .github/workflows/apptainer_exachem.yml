@@ -144,6 +144,7 @@ jobs:
         pwd
         ls -lrta
         cp patches/myaug.patch ${{ matrix.folder }}
+        cp patches/static_cast_int.patch ${{ matrix.folder }}
         ls -lrta ${{ matrix.folder }}
     - name: push_false
       id: push_false
