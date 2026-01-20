@@ -1,0 +1,13 @@
+diff --git a/exachem/scf/scf_guess.cpp b/exachem/scf/scf_guess.cpp
+index 1d6d525..28546e5 100644
+--- a/exachem/scf/scf_guess.cpp
++++ b/exachem/scf/scf_guess.cpp
+@@ -359,7 +359,7 @@ void exachem::scf::SCFGuess::compute_ecp_ints(ExecutionContext& ec, const SCFVar
+   double* buffer_sph_ = new double[size_];
+   memset(buffer_, 0, size_ * sizeof(double));
+ 
+-  libecpint::ECPIntegral engine(maxam, ecp_maxam, 0, 1e-17, 1024, 2048);
++  libecpint::ECPIntegral engine(maxam, ecp_maxam, 0, 1e-24, 1024, 2048);
+ 
+   auto compute_ecp_ints_lambda = [&](const IndexVector& blockid) {
+     auto bi0 = blockid[0];
