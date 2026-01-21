@@ -112,6 +112,9 @@ jobs:
         if [[ ${{ matrix.elpa }} ==  Y ]]; then
           echo "elpa=.elpa" >> $GITHUB_ENV
         fi
+        if [[ ${{ matrix.ofi }} !=  N ]]; then
+          echo "ofi=.ofi-"${{ matrix.ofi }} >> $GITHUB_ENV
+        fi
     - name: tag
       run: |
         echo "$(echo tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}${{ env.ga_runtime}}${{ env.elpa}}${{ matrix.ofi }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
@@ -130,7 +133,7 @@ jobs:
       with:
         path: |
           ~/cache
-        key: ${{ matrix.folder}}-${{ env.exachemversion}}${{ env.simd }}${{ matrix.ofi }}-exachemcache-v001
+        key: ${{ matrix.folder}}-${{ env.exachemversion}}${{ env.simd }}${{ matrix.ofi }}'-exachemcache-v001
     - name: fetch cache
       if: steps.setup-cache.outputs.cache-hit == 'true'
       run: |
