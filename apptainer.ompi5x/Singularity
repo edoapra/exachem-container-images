@@ -19,6 +19,7 @@ exachem_ecpint.patch /opt/
     bash -c "echo 'ELPA is ${ELPA}'; echo 'ELPA=${ELPA} ' >> ${SINGULARITY_ROOTFS}/elpa.txt "
     cat ${SINGULARITY_ROOTFS}/elpa.txt
     bash -c "if [[ -z '${OMPI}' ]]; then echo 'OMPI=4.1.6 ' >> ${SINGULARITY_ROOTFS}/OMPI.txt ; else echo 'OMPI is ${OMPI}'; echo 'OMPI=${OMPI} ' >> ${SINGULARITY_ROOTFS}/ompi.txt ; fi"
+    bash -c "if [[ ! -z '${OFI}' ]]; then echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"
     bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_2SIDED ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=ompi ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
@@ -71,6 +72,7 @@ export SINGULARITY_PATH=$PATH
 export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 export `cat ./ga_runtime.txt`
 export `cat ./ompi.txt`
+export `cat ./ofi.txt` || true
 export `cat ./mpi_impl.txt`
 export `cat ./exachem_branch.txt`
 export `cat ./tamm_branch.txt`
@@ -81,6 +83,7 @@ echo MPI_IMPL is $MPI_IMPL
 echo EXACHEM_BRANCH is $EXACHEM_BRANCH
 echo TAMM_BRANCH is $TAMM_BRANCH
  echo OMPI is $OMPI
+ echo OFI is $OFI
 #export ompi=4.1.6
 export OMPI_DIR=/opt/ompi
 export SINGULARITY_ompi=$ompi
@@ -97,8 +100,14 @@ if [ $ompi_major = '5' ]; then
 else
     export ompi_options=' --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --without-verbs '
 fi 
-echo ompi_options $ompi_options 
-
+echo ompi_options $ompi_options
+if [ -n $OFI ]; then
+ofi_options='--with-ucx=no --with-verbs=no --with-ofi='$OMPI_DIR' '
+echo $ofi_options
+else
+ucx_options='--with-ucx='$OMPI_DIR' --enable-mca-no-build=btl-uct'
+echo ucx_options $ucx_options
+fi
  if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
  else export FC=gfortran ; export CC=gcc; export CXX=g++; fi \
 && echo 'FC is' "$FC"  \
@@ -184,7 +193,6 @@ fi \
 && echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
 && apt-get clean  \
 && echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true  \
-&& bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
 $FC -v \
 && wget --progress=dot:giga https://github.com/openucx/xpmem/archive/refs/tags/v$xpmem.tar.gz -O - |tar xzf - \
 && cd xpmem-$xpmem \
@@ -200,6 +208,17 @@ $FC -v \
 && make -j3 \
 && make install \
 && cd .. \
+&& if [ ! -z $OFI ]; then \
+ echo installing libfabric \
+&&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v${OFI}/libfabric-${OFI}.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
+&&  cd libfabric-${OFI}  \
+&&    mkdir build && cd build \
+&& ../configure --prefix=$OMPI_DIR \
+&& make -j4 && make install  \
+&& if [ ! -f ${OMPI_DIR}/bin/fi_info ]; then echo fi_info\ not\ found; 	exit 1; fi \
+&& echo done installing libfabrics ; \
+ else  \
+echo installing ucx \
 && wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz -O - | tar xzf - \
 && cd ucx-$ucx \
 && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch \
@@ -218,12 +237,15 @@ $FC -v \
 && make install >& makei.log && tail -50 makei.log \
 && echo 'Cleaning up ucx ..........' \
 && make clean >& makec.log \
-&& cd ../.. \
+&& cd ../.. ;\
+fi \
 && wget --progress=dot:giga https://download.open-mpi.org/release/open-mpi/v'$ompi_major'.'$ompi_minor'/openmpi-$OMPI.tar.gz -O - | tar xzf -   && \
 ln -sf openmpi-$OMPI ompi-$OMPI  && \
 cd $ompi_prefix                                                        && \
 echo 'Configuring openmpi ..........' &&\
-./configure  --prefix=$OMPI_DIR --with-ucx=$OMPI_DIR --enable-mca-no-build=btl-uct   \
+./configure  --prefix=$OMPI_DIR  \
+$ucx_options \
+$ofi_options \
 $ompi_options \
  --enable-mpi1-compatibility --with-slurm --without-tm --without-lsf  \
  --without-sge --without-alps --without-lustre --disable-memchecker \

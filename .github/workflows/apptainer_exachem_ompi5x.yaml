@@ -50,6 +50,13 @@ jobs:
               exachem_branch: main
               elpa: Y
             - gpu: nvidia_70
+              ga_runtime: MPI_PROGRESS_RANK
+              folder: apptainer.ompi5x
+              ompi: 5.0.9
+              ofi: 1.22.0
+              exachem_branch: main
+              elpa: N
+            - gpu: nvidia_70
               ga_runtime: MPI_RMA
               folder: apptainer.ompi5x
               ompi: 5.0.9
@@ -100,7 +107,7 @@ jobs:
         fi
     - name: tag
       run: |
-        echo "$(echo tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}${{ env.ga_runtime}}${{ env.elpa}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        echo "$(echo tag=oras://ghcr.io/${{ github.repository }}/apptainer${{ env.exachemversion}}${{ env.ga_runtime}}${{ env.elpa}}${{ matrix.ofi }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
     - name: echo-tag
       run: |
         echo ' the apptainer tag is ' '${{ env.tag }}'
@@ -162,7 +169,7 @@ jobs:
     - name: build an apptainer container
       run: |
         cd ${{ matrix.folder }}
-        MYUSERNAME=${{ github.actor}} EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} GA_RUNTIME=${{ matrix.ga_runtime}} ELPA=${{ matrix.elpa}} MPI_IMPL=ompi OMPI=${{ matrix.ompi }}  apptainer build --fakeroot ${{ matrix.folder }}.simg  Singularity
+        MYUSERNAME=${{ github.actor}} EXACHEM_BRANCH=${{ matrix.exachem_branch}} TAMM_BRANCH=${{ matrix.tamm_branch}} GPU=${{ matrix.gpu}} GA_RUNTIME=${{ matrix.ga_runtime}} ELPA=${{ matrix.elpa}}  MPI_IMPL=ompi OMPI=${{ matrix.ompi }} OFI=${{ matrix.ofi }} apptainer build --fakeroot ${{ matrix.folder }}.simg  Singularity
     - name: builddate
       id: build-date
       run: |
