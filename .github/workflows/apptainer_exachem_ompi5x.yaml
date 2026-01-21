@@ -59,6 +59,20 @@ jobs:
               ofi: 1.22.0
               exachem_branch: main
               elpa: N
+            - gpu: amd_gfx90a_rocm6.2.4
+              ga_runtime: MPI_PROGRESS_RANK
+              folder: apptainer.ompi5x
+              ompi: 5.0.9
+              ofi: 1.22.0
+              exachem_branch: main
+              elpa: N
+            - gpu: cpu
+              ga_runtime: MPI_PROGRESS_RANK
+              folder: apptainer.ompi5x
+              ompi: 5.0.9
+              ofi: 1.22.0
+              exachem_branch: main
+              elpa: N
             - gpu: nvidia_70
               ga_runtime: MPI_RMA
               folder: apptainer.ompi5x
