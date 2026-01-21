@@ -133,7 +133,7 @@ jobs:
       with:
         path: |
           ~/cache
-        key: ${{ matrix.folder}}-${{ env.exachemversion}}${{ env.simd }}${{ env.ofi }}'-exachemcache-v001
+        key: ${{ matrix.folder}}-${{ env.exachemversion}}${{ env.simd }}${{ env.ofi }}-exachemcache-v001
     - name: fetch cache
       if: steps.setup-cache.outputs.cache-hit == 'true'
       run: |
