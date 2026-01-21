@@ -193,6 +193,7 @@ fi \
 && echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
 && apt-get clean  \
 && echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true  \
+&& bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
 $FC -v \
 && wget --progress=dot:giga https://github.com/openucx/xpmem/archive/refs/tags/v$xpmem.tar.gz -O - |tar xzf - \
 && cd xpmem-$xpmem \
