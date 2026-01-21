@@ -146,7 +146,7 @@ fi
  libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
  libhwloc-dev  librte-common-mlx5-2* librte-net-mlx5-2* librte-compress-mlx5-2* librte-crypto-mlx5-2* librte-regex-mlx5-2* librte-vdpa-mlx5-2* \
- pkg-config gawk  software-properties-common linux-headers-generic \
+ pkg-config gawk  software-properties-common linux-headers-generic lsb-release \
  && if [ $ompi_major = '5' ]; then
     apt-get -y install -y libpmix-bin libpmix-dev libpmix2
 else
