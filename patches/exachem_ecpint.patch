@@ -7,7 +7,7 @@ index 1d6d525..28546e5 100644
    memset(buffer_, 0, size_ * sizeof(double));
  
 -  libecpint::ECPIntegral engine(maxam, ecp_maxam, 0, 1e-17, 1024, 2048);
-+  libecpint::ECPIntegral engine(maxam, ecp_maxam, 0, 1e-20, 1024, 2048);
++  libecpint::ECPIntegral engine(maxam, ecp_maxam, 0, 1e-18, 1024, 2048);
  
    auto compute_ecp_ints_lambda = [&](const IndexVector& blockid) {
      auto bi0 = blockid[0];
