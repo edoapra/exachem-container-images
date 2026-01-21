@@ -19,7 +19,7 @@ exachem_ecpint.patch /opt/
     bash -c "echo 'ELPA is ${ELPA}'; echo 'ELPA=${ELPA} ' >> ${SINGULARITY_ROOTFS}/elpa.txt "
     cat ${SINGULARITY_ROOTFS}/elpa.txt
     bash -c "if [[ -z '${OMPI}' ]]; then echo 'OMPI=4.1.6 ' >> ${SINGULARITY_ROOTFS}/OMPI.txt ; else echo 'OMPI is ${OMPI}'; echo 'OMPI=${OMPI} ' >> ${SINGULARITY_ROOTFS}/ompi.txt ; fi"
-    bash -c "if [[ ! -z '${OFI}' ]]; then echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"
+    bash -c "if [[ '${OFI}' != "N" ]]; then echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"
     bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_2SIDED ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=ompi ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
@@ -101,7 +101,7 @@ else
     export ompi_options=' --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --without-verbs '
 fi 
 echo ompi_options $ompi_options
-if [ -n $OFI ]; then
+if [ $OFI != "N" ]; then
 ofi_options='--with-ucx=no --with-verbs=no --with-ofi='$OMPI_DIR' '
 echo $ofi_options
 else
@@ -210,6 +210,7 @@ $FC -v \
 && cd .. \
 && if [ ! -z $OFI ]; then \
  echo installing libfabric \
+ && echo download libfabrics $OFI \
 &&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v${OFI}/libfabric-${OFI}.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
 &&  cd libfabric-${OFI}  \
 &&    mkdir build && cd build \
