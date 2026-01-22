@@ -209,6 +209,7 @@ $FC -v \
 && cd .. \
 && if [ ! -z $OFI ]; then \
  echo installing libfabric \
+&&   apt-get install -y libconfig-dev libsensors-dev libuv1-dev libfuse-dev libyaml-dev libjson-c-dev libcurl4-openssl-dev  \
 && set -ex \
 &&	    curl -v -L https://github.com/HewlettPackard/shs-cassini-headers/archive/$SHSTAG.tar.gz | tar xzf -  \
 &&	    mv shs-cassini-headers-* shs-cassini-headers \
