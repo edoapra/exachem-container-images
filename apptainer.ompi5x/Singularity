@@ -213,8 +213,10 @@ $FC -v \
 && set -ex \
 &&	    curl -v -L https://github.com/HewlettPackard/shs-cassini-headers/archive/$SHSTAG.tar.gz | tar xzf -  \
 &&	    mv shs-cassini-headers-* shs-cassini-headers \
+&&          rsync -L -av shs-cassini-headers $OMPI_DIR/. \
 &&	    curl -v -L https://github.com/HewlettPackard/shs-cxi-driver/archive/$SHSTAG.tar.gz | tar xzf - \
 &&	    mv shs-cxi-driver-* shs-cxi-driver \
+&&          rsync -L -av shs-cxi-driver $OMPI_DIR/. \
 &&	    cd $MYROOT \
 &&	    curl -v -L https://github.com/HewlettPackard/shs-libcxi/archive/$SHSTAG.tar.gz | tar xzf - \
 &&	    mv shs-libcxi-* shs-libcxi \
