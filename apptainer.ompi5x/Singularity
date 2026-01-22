@@ -219,6 +219,8 @@ $FC -v \
 &&	    curl -v -L https://github.com/HewlettPackard/shs-libcxi/archive/$SHSTAG.tar.gz | tar xzf - \
 &&	    mv shs-libcxi-* shs-libcxi \
 &&	    cd shs-libcxi \
+&&          echo 'ls  cassini headers' $(ls -lrt $OMPI_DIR/shs-cassini-headers/include)  \
+&&          echo 'find cxi_prov_hw.h' $(find $OMPI_DIR -name cxi_prov_hw.h)  \
 &&	    sh autogen.sh \
 &&	    ./configure --prefix=$OMPI_DIR \
 &&	    make CFLAGS='-I$OMPI_DIR/shs-cassini-headers/include/ -I$OMPI_DIR/shs-cxi-driver/include/' pkg_CFLAGS=-Wall -i \
