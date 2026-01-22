@@ -213,6 +213,7 @@ $FC -v \
 && ../configure --prefix=$OMPI_DIR || { echo 'OFI configuration failure'; exit 1; }\
 && make -j4 || { echo 'OFI compilation failure'; exit 1; } && make install  \
 && if [ ! -f ${OMPI_DIR}/bin/fi_info ]; then echo fi_info\ not\ found; 	exit 1; fi \
+&& cd ../.. \
 && echo done installing libfabrics ; \
  else  \
 echo installing ucx \
