@@ -219,9 +219,8 @@ $FC -v \
 &&	    cd shs-libcxi \
 &&	    sh autogen.sh \
 &&	    ./configure --prefix=$OMPI_DIR \
-&&	    make CFLAGS="-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/" pkg_CFLAGS=-Wall -i \
-&&	    make CFLAGS="-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/"  \
-install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec   \
+&&	    make CFLAGS='-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/' pkg_CFLAGS=-Wall -i \
+&&	    make CFLAGS='-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/' install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec   \
 && echo download libfabrics $OFI \
 &&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v${OFI}/libfabric-${OFI}.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
 &&  cd libfabric-${OFI}  \
