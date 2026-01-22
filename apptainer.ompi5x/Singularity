@@ -210,8 +210,8 @@ $FC -v \
 &&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v${OFI}/libfabric-${OFI}.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
 &&  cd libfabric-${OFI}  \
 &&    mkdir build && cd build \
-&& ../configure --prefix=$OMPI_DIR \
-&& make -j4 && make install  \
+&& ../configure --prefix=$OMPI_DIR || { echo 'OFI configuration failure'; exit 1; }\
+&& make -j4 || { echo 'OFI compilation failure'; exit 1; } && make install  \
 && if [ ! -f ${OMPI_DIR}/bin/fi_info ]; then echo fi_info\ not\ found; 	exit 1; fi \
 && echo done installing libfabrics ; \
  else  \
@@ -225,11 +225,10 @@ echo installing ucx \
 && echo 'Configuring ucx ..........' \
 && ../configure --prefix=$OMPI_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check \
  --without-cuda --without-rocm \
- --with-xpmem=$OMPI_DIR --with-knem=$OMPI_DIR  >& config.log && tail -50 config.log \
+ --with-xpmem=$OMPI_DIR   >& config.log || { echo 'UCX config failure'; tail -1500 config.log; exit 1; } && tail -50 config.log \
 && echo 'Checking xpmem .........' $(grep -i xpmem conf*) \
-&& echo 'Checking knem ..........' $(grep -i knem conf*) \
 && echo 'Compiling ucx ..........' \
-&& make -j4 >& make.log && tail -50 make.log \
+&& make -j4 >& make.log || { echo 'UCX compilation failure'; tail -1500 make.log; exit 1; }&& tail -50 make.log \
 && echo 'Installing ucx ..........' \
 && make install >& makei.log && tail -50 makei.log \
 && echo 'Cleaning up ucx ..........' \
