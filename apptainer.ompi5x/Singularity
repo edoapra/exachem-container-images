@@ -208,13 +208,14 @@ $FC -v \
 && cd .. \
 && if [ ! -z $OFI ]; then \
  echo installing libfabric \
+&& set -ex \
 &&	    export SHSTAG=release/shs-12.0.2 \
-&&	    curl -L https://github.com/HewlettPackard/shs-cassini-headers/archive/${SHSTAG}.tar.gz | tar xzf -  \
+&&	    curl -v -L https://github.com/HewlettPackard/shs-cassini-headers/archive/${SHSTAG}.tar.gz | tar xzf -  \
 &&	    mv shs-cassini-headers-* shs-cassini-headers \
-&&	    curl -L https://github.com/HewlettPackard/shs-cxi-driver/archive/${SHSTAG}.tar.gz | tar xzf - \
+&&	    curl -v -L https://github.com/HewlettPackard/shs-cxi-driver/archive/${SHSTAG}.tar.gz | tar xzf - \
 &&	    mv shs-cxi-driver-* shs-cxi-driver \
 &&	    cd $MYROOT \
-&&	    curl -L https://github.com/HewlettPackard/shs-libcxi/archive/${SHSTAG}.tar.gz | tar xzf - \
+&&	    curl -v -L https://github.com/HewlettPackard/shs-libcxi/archive/${SHSTAG}.tar.gz | tar xzf - \
 &&	    mv shs-libcxi-* shs-libcxi \
 &&	    cd shs-libcxi \
 &&	    sh autogen.sh \
@@ -226,6 +227,7 @@ $FC -v \
 &&  cd libfabric-${OFI}  \
 && wget https://github.com/ofiwg/libfabric/commit/f98fbcb09bd86e9b8da14ef37cd2cb3dfb7188f4.patch \
 && patch -p1 < f98fbcb09bd86e9b8da14ef37cd2cb3dfb7188f4.patch \
+&& set +ex \
 &&    mkdir build && cd build \
 && ../configure --prefix=$OMPI_DIR --with-cassini-headers=$OMPI_DIR/shs-cassini-headers --with-cxi-uapi-headers=$OMPI_DIR/shs-cxi-driver --enable-cxi=yes --enable-xpmem=$OMPI_DIR || { echo 'OFI configuration failure'; exit 1; }\
 && make -j4 || { echo 'OFI compilation failure'; exit 1; } && make install  \
