@@ -210,20 +210,20 @@ $FC -v \
  echo installing libfabric \
 && set -ex \
 &&	    export SHSTAG=release/shs-12.0.2 \
-&&	    curl -v -L https://github.com/HewlettPackard/shs-cassini-headers/archive/${SHSTAG}.tar.gz | tar xzf -  \
+&&	    curl -v -L https://github.com/HewlettPackard/shs-cassini-headers/archive/$SHSTAG.tar.gz | tar xzf -  \
 &&	    mv shs-cassini-headers-* shs-cassini-headers \
-&&	    curl -v -L https://github.com/HewlettPackard/shs-cxi-driver/archive/${SHSTAG}.tar.gz | tar xzf - \
+&&	    curl -v -L https://github.com/HewlettPackard/shs-cxi-driver/archive/$SHSTAG.tar.gz | tar xzf - \
 &&	    mv shs-cxi-driver-* shs-cxi-driver \
 &&	    cd $MYROOT \
-&&	    curl -v -L https://github.com/HewlettPackard/shs-libcxi/archive/${SHSTAG}.tar.gz | tar xzf - \
+&&	    curl -v -L https://github.com/HewlettPackard/shs-libcxi/archive/$SHSTAG.tar.gz | tar xzf - \
 &&	    mv shs-libcxi-* shs-libcxi \
 &&	    cd shs-libcxi \
 &&	    sh autogen.sh \
 &&	    ./configure --prefix=$OMPI_DIR \
-&&	    make CFLAGS='-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/' pkg_CFLAGS=-Wall -i \
-&&	    make CFLAGS='-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/' install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec   \
+&&	    make CFLAGS='-I$OMPI_DIR/shs-cassini-headers/include/ -I$OMPI_DIR/shs-cxi-driver/include/' pkg_CFLAGS=-Wall -i \
+&&	    make CFLAGS='-I$OMPI_DIR/shs-cassini-headers/include/ -I$OMPI_DIR/shs-cxi-driver/include/' install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec   \
 && echo download libfabrics $OFI \
-&&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v${OFI}/libfabric-${OFI}.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
+&&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v$OFI/libfabric-$OFI.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
 &&  cd libfabric-${OFI}  \
 && wget https://github.com/ofiwg/libfabric/commit/f98fbcb09bd86e9b8da14ef37cd2cb3dfb7188f4.patch \
 && patch -p1 < f98fbcb09bd86e9b8da14ef37cd2cb3dfb7188f4.patch \
