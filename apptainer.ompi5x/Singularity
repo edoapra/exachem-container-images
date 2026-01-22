@@ -111,6 +111,7 @@ else
 ucx_options='--with-ucx='$OMPI_DIR' --enable-mca-no-build=btl-uct'
 echo ucx_options $ucx_options
 fi
+export MYROOT=/
  if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
  else export FC=gfortran ; export CC=gcc; export CXX=g++; fi \
 && echo 'FC is' "$FC"  \
@@ -197,6 +198,7 @@ fi \
 && echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true  \
 && bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
 $FC -v \
+&& mkdir -p $OMPI_DIR/lib  && ln -sf $OMPI_DIR/lib $OMPI_DIR/lib64 \
 && wget --progress=dot:giga https://github.com/openucx/xpmem/archive/refs/tags/v$xpmem.tar.gz -O - |tar xzf - \
 && cd xpmem-$xpmem \
 && sh autogen.sh \
@@ -206,11 +208,27 @@ $FC -v \
 && cd .. \
 && if [ ! -z $OFI ]; then \
  echo installing libfabric \
- && echo download libfabrics $OFI \
+	    export SHSTAG=release/shs-12.0.2
+	    curl -L https://github.com/HewlettPackard/shs-cassini-headers/archive/${SHSTAG}.tar.gz | tar xzf -
+	    mv shs-cassini-headers-* shs-cassini-headers
+	    curl -L https://github.com/HewlettPackard/shs-cxi-driver/archive/${SHSTAG}.tar.gz | tar xzf -
+	    mv shs-cxi-driver-* shs-cxi-driver
+	    cd $MYROOT
+	    curl -L https://github.com/HewlettPackard/shs-libcxi/archive/${SHSTAG}.tar.gz | tar xzf -
+	    mv shs-libcxi-* shs-libcxi
+	    cd shs-libcxi 
+	    sh autogen.sh 
+	    ./configure --prefix=$OMPI_DIR 
+	    make CFLAGS="-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/" pkg_CFLAGS=-Wall -i 
+	    make CFLAGS="-I${OMPI_DIR}/shs-cassini-headers/include/ -I${OMPI_DIR}/shs-cxi-driver/include/"  \
+install-dist_cxi_yamlDATA install-man install-pkgconfigDATA install-pkgincludeHEADERS  install-exec   \
+&& echo download libfabrics $OFI \
 &&	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v${OFI}/libfabric-${OFI}.tar.bz2 -O - | tar --no-same-owner  -xjf -  \
 &&  cd libfabric-${OFI}  \
+&& wget https://github.com/ofiwg/libfabric/commit/f98fbcb09bd86e9b8da14ef37cd2cb3dfb7188f4.patch \
+&& patch -p1 < f98fbcb09bd86e9b8da14ef37cd2cb3dfb7188f4.patch \
 &&    mkdir build && cd build \
-&& ../configure --prefix=$OMPI_DIR || { echo 'OFI configuration failure'; exit 1; }\
+&& ../configure --prefix=$OMPI_DIR --with-cassini-headers=$OMPI_DIR/shs-cassini-headers --with-cxi-uapi-headers=$OMPI_DIR/shs-cxi-driver --enable-cxi=yes --enable-xpmem=$OMPI_DIR || { echo 'OFI configuration failure'; exit 1; }\
 && make -j4 || { echo 'OFI compilation failure'; exit 1; } && make install  \
 && if [ ! -f ${OMPI_DIR}/bin/fi_info ]; then echo fi_info\ not\ found; 	exit 1; fi \
 && cd ../.. \
