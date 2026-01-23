@@ -322,8 +322,6 @@ cd .. ; rm -rf *tar*gz openmpi-* ucx-$ucx ;fi " \
 &&              make install   \
 && 	     echo exit code for TAMM make install $?   \
 &&              cd /opt/exachem   \
-&&           patch -p1 -s -N < /opt/exachem_ecpint.patch \
-&&           rm -f /opt/exachem_ecpint.patch \
 && 	     mkdir build && cd build   \
 && 	     echo ' === ls -l /opt/install/exachem ===' $(ls -l /opt/install/exachem)   \
 && 	     echo ' === ls -l /opt/install/exachem/lib ===' $(ls -l /opt/install/exachem/lib)   \
