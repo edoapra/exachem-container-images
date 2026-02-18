@@ -435,7 +435,7 @@ fi
 &&              git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem    \
 &&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
-&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb_v2.patch \
+&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/mntfix/apptainer.mpich/mycmb_v2.patch \
 && patch -p1 < mycmb_v2.patch \
 && export NO_STOP_MESSAGE=1 \
 && 	     mkdir build && cd build  \
