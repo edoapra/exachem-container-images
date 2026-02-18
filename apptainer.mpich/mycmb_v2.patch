@@ -8,7 +8,7 @@ index 7a0a6f1..7d33f3d 100644
        CMakeBuild
 -      GIT_REPOSITORY https://github.com/NWChemEx-Project/CMakeBuild.git
 -      GIT_TAG ${CMSB_TAG}
-+      GIT_REPOSITORY https://github.com/edo/CMakeBuild.git
++      GIT_REPOSITORY https://github.com/edoapra/CMakeBuild.git
 +      GIT_TAG ecpint
      )
    endif()
