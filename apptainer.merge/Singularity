@@ -256,7 +256,7 @@ apt-get install  -q=2 -y  autoconf automake libtool git
  export UBUNTU_RELEASE=$(lsb_release -r |cut -d : -f 2 | sed 's/\t//') 
  echo UBUNTU_RELEASE is $UBUNTU_RELEASE 
 export unodot=$(echo $UBUNTU_RELEASE | sed 's/\.//')
-if [ $GPU == "nvidia" ]
+if [ $GPU = "nvidia" ]
 then 	    
     curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${unodot}/x86_64/cuda-archive-keyring.gpg 
     cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg 
