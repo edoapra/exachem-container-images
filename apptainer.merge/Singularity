@@ -56,7 +56,7 @@ echo 'GPU=nvidia ' >  gpu.txt  ; fi"
 export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
-if [ ${GPU} = "nvidia" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=4;fi
+if [ ${GPU} = "nvidia" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=6;fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
@@ -610,8 +610,8 @@ ls -lart  /opt/install/exachem || true
 %environment
 export MPI_DIR=/opt/mpi
 export SINGULARITY_MPI_DIR=$MPI_DIR
-export CUDA_VERSION_MAJOR=11 
-export CUDA_VERSION_MINOR=7
+export CUDA_VERSION_MAJOR=12
+export CUDA_VERSION_MINOR=6
 export PATH=/opt/install/exachem/bin:$MPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:"$ROCM_PATH"/bin/:$PATH
 export LD_LIBRARY_PATH=$MPI_DIR/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPI_DIR/lib:"$ROCM_PATH"/lib:$LD_LIBRARY_PATH:
 export SINGULARITYENV_APPEND_PATH=/opt/install/exachem/bin:$MPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:"$ROCM_PATH"/bin
