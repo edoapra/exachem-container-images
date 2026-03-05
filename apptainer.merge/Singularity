@@ -258,8 +258,7 @@ apt-get install  -q=2 -y  autoconf automake libtool git
  export UBUNTU_RELEASE=$(lsb_release -r |cut -d : -f 2 | sed 's/\t//') 
  echo UBUNTU_RELEASE is $UBUNTU_RELEASE 
 export unodot=$(echo $UBUNTU_RELEASE | sed 's/\.//')
-if [ $GPU = "nvidia" ]
-then 	    
+if [ $GPU = "nvidia" ]; then 	    
     curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${unodot}/x86_64/cuda-archive-keyring.gpg 
     cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg 
     echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu'${unodot}'/x86_64/ /' >  /etc/apt/sources.list.d/cuda-ubuntu${unodot}-x86_64.list
@@ -269,8 +268,7 @@ then
     apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
 fi
 
-if [ $GPU = "amd" ]
-then
+if [ $GPU = "amd" ]; then
     mkdir --parents --mode=0755 /etc/apt/keyrings 
     wget --quiet https://repo.radeon.com/rocm/rocm.gpg.key -O - |  gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null
     echo ROCM_VERSION is $ROCM_VERSION
@@ -470,8 +468,7 @@ if [ -n "${MPICH+1}" ]; then
 	    sh ./autogen.sh 
 	fi
 	FC_short=$(basename -- $FC | cut -d \- -f 1 | sed 's/[0-9]*//g')
-	if [ ${FC_short} = "gfortran" ]
-	then
+	if [ ${FC_short} = "gfortran" ]; then
 	    FFLAGS=-fallow-argument-mismatch
 	    FCFLAGS=-fallow-argument-mismatch
 	fi
@@ -528,18 +525,15 @@ cd TAMM
 export NO_STOP_MESSAGE=1
 mkdir build && cd build 
 CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  
-if [ ${GPU} != "intel_gpu_pvc" ]
-then
+if [ ${GPU} != "intel_gpu_pvc" ]; then
     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLAS_ARCH=zen3 -DMARCH_FLAGS=-march=znver3"
 fi
 CMAKE_OPTIONS="$CMAKE_OPTIONS -DGCCROOT=/usr" 
-if [ ${CC} = "icx" ]
-then
+if [ ${CC} = "icx" ]; then
     echo "intel compilers "
     CMAKE_OPTIONS="$CMAKE_OPTIONS -DLINALG_VENDOR=IntelMKL  -DLINALG_PREFIX=${MKLROOT} "
 fi 
-if [ ${GPU} = "intel_gpu_pvc" ];
-then
+if [ ${GPU} = "intel_gpu_pvc" ]; then
     echo "intel_gpu_pvc "; CMAKE_OPTIONS="$CMAKE_OPTIONS  -DUSE_OPENMP=OFF -DTAMM_ENABLE_DPCPP=ON "
 fi 
 if [ ${GPU} = "nvidia" ]; then
@@ -549,22 +543,19 @@ if [ ${GPU} = "amd" ]; then
     echo "amd gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_HIP=ON -DROCM_ROOT=$ROCM_PATH -DGPU_ARCH=${GPU_ARCH} " ; ls -lrt $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/ ; ln -sf $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/rocblas.h
 fi  
 export USE_SCALAPACK=OFF 
-if [ ${SCALAPACK} = "y" ]
-then
+if [ ${SCALAPACK} = "y" ]; then
     echo "SCALAPACK ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_SCALAPACK=ON "; export USE_SCALAPACK=ON
 fi  
 if [ \( ${CC} = "gcc" \) -a \(  ${ELPA} = "y" \) ]; then
     echo "ELPA ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON "
 fi 
-if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "y" ) ]
-then
+if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "y" ) ]; then
     echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	"
 fi  
 CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  
 echo "modify ga repository to use" 
 CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_REPO="\""https://github.com/GlobalArrays/ga.git"\"" -DGA_TAG="\""develop"\"""    
-if [ ${GPU} = "intel_gpu_pvc" ]
-then
+if [ ${GPU} = "intel_gpu_pvc" ]; then
     CMAKE_OPTIONS="$CMAKE_OPTIONS  -DTAMM_CXX_FLAGS="\""-mtune=sapphirerapids -ffast-math -ffp-contract=fast -fp-model=fast=2 -fsycl -fsycl-device-code-split=per_kernel -fsycl-targets=intel_gpu_pvc -mllvm -enable-global-offset=false"\"" -DUSE_LIBNUMA=OFF"
 fi 
 export CMAKE_OPTIONS   
@@ -588,8 +579,7 @@ cd /opt/exachem
 mkdir build && cd build   
 echo ' === ls -l /opt/install/exachem ===' $(ls -l /opt/install/exachem) 
 echo ' === ls -l /opt/install/exachem/lib ===' $(ls -l /opt/install/exachem/lib)   
-if [ -f /opt/install/exachem/include/libint2.h ]
-then
+if [ -f /opt/install/exachem/include/libint2.h ]; then
     echo 'found libint cache' 
     mkdir -p /opt/exachem/build/stage/opt || true 
     rsync -av /opt/install /opt/exachem/build/stage/opt/.
@@ -625,12 +615,10 @@ localepurge
 rm -rf /usr/share/doc 
 apt-get -q=2 -y purge   patch curl  wget  make git cpp-"$GCC_VERSION" gfortran-"$GCC_VERSION" gcc-"$GCC_VERSION" libicu-dev libpython"$PY_VERSION"-dev libstdc++-"$GCC_VERSION"-dev libc6-dev libgcc-"$GCC_VERSION"-dev libgfortran-"$GCC_VERSION"-dev  || true 
 apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean 
-if [ "$GPU" = nvidia ]
-then
+if [ "$GPU" = nvidia ]; then
     rm -rf /usr/local/cuda*; apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcufft-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcufft-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcusolver-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcusparse-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libnpp-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcurand-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-nvrtc-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR"  libcufile-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" || true ; rm -f /usr/local/cuda-*/targets/x86_64-linux/lib/*static*a || true
     fi
-if [ "$GPU" = "amd" ]
-then
+if [ "$GPU" = "amd" ]; then
     apt-get  purge -y   git-man openmp-extras \
     lib32gcc-11-dev  libc6-dev-i386 libx32gcc-11-dev libc6-dev-x32 lib32gcc-11-dev  \
     lib32asan6 lib32atomic1 lib32gcc-s1 lib32gomp1 lib32itm1 lib32quadmath0 lib32stdc++6 lib32ubsan1 libc6-i386 \
