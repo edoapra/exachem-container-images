@@ -31,6 +31,8 @@ install-autotools.sh /opt
     bash -c "if [[ -z '${MPICH_DEVICE}' ]]; then echo 'MPICH_DEVICE=ch4:ofi ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; else echo 'MPICH_DEVICE is ${MPICH_DEVICE}'; echo 'MPICH_DEVICE=${MPICH_DEVICE} ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
     bash -c "if [[ -z '${EXACHEM_BRANCH}' ]]; then echo 'EXACHEM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'EXACHEM_BRANCH is ${EXACHEM_BRANCH}'; echo 'EXACHEM_BRANCH=${EXACHEM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; fi"
+    bash -c "if [[ -z '${SCALAPACK}' ]]; then echo 'SCALAPACK=N ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; else echo 'SCALAPACK is ${SCALAPACK}'; echo 'SCALAPACK=${SCALAPACK} ' >> ${SINGULARITY_ROOTFS}/scalapack.txt ; fi"
+    bash -c "if [[ -z '${ELPA}' ]]; then echo 'ELPA=N ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; else echo 'ELPA is ${ELPA}'; echo 'ELPA=${ELPA} ' >> ${SINGULARITY_ROOTFS}/scalapack.txt ; fi"
 #    bash -c "if [[ -z '${MYUSERNAME}' ]]; then echo 'MYUSERNAME=edoapra ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; else echo 'MYUSERNAME is ${MYUSERNAME}'; echo 'MYUSERNAME=${MYUSERNAME} ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; fi"
     ls -lrt ${CACHEDIR} || true
     ls -la  ${CACHEDIR}/ || true
@@ -75,6 +77,8 @@ export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 export `cat ./ga_runtime.txt`
 export `cat ./exachem_branch.txt`
 export `cat ./tamm_branch.txt`
+export `cat ./scalapack.txt`
+export `cat ./elpa.txt`
  if [ ! -f ./mpi_impl.txt ]; then
      echo MPI_IMPL not defined
      exit 1
@@ -550,7 +554,7 @@ if [ \( ${CC} = "gcc" \) -a \(  ${ELPA} = "y" \) ]; then
     echo "ELPA ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON "
 fi 
 if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "y" ) ]; then
-    echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	"
+    echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' "
 fi  
 CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  
 echo "modify ga repository to use" 
