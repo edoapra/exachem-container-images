@@ -447,9 +447,11 @@ if [ -n "${MPICH+1}" ]; then
 #	if [ $MPICH = aurora ]; then
 #	fi 
 	if [ $mpich_major = '4' ] || [ $mpich_major = '5' ]; then
-	   export mpich_options="$mpich_options $pmix_options --with-hwloc=/usr "
+	   export mpich_options="$mpich_options $pmix_options "
+	   #export mpich_options="$mpich_options $pmix_options --with-hwloc=/usr "
 	else
-	   export mpich_options="$mpich_options --with-hwloc-prefix=/usr "
+	   export mpich_options="$mpich_options "
+	   #export mpich_options="$mpich_options --with-hwloc-prefix=/usr "
 	fi
 	echo ' mpich_options is set to' $mpich_options 
 	wget  --progress=dot:giga https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz  -O - | tar xzf -   
