@@ -33,14 +33,14 @@ ENV         CONTAINER=${CONTAINER}
 ARG mpich=4.0.2
 ARG mpich_prefix=mpich-$mpich
 ARG	    CUDA_VERSION_MAJOR=12 \
-	    CUDA_VERSION_MINOR=4
+	    CUDA_VERSION_MINOR=8
 ARG	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:/opt/install/exachem/bin:/usr/local/bin \
 	    LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib  
 WORKDIR     /opt
 #ENV CRAYPE_LINK_TYPE=dynamic
 ENV	    CUDA_VERSION_MAJOR=12 
-ENV	    CUDA_VERSION_MINOR=4
-ENV         GCC_VERSION=12
+ENV	    CUDA_VERSION_MINOR=8
+ENV         GCC_VERSION=14
 ENV         PY_VERSION=3.11
 ENV	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:/opt/nwchem/bin:/usr/local/bin \
 	    LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib  
@@ -194,8 +194,8 @@ cat /opt/ao_strip.sh && \
 	    && echo '*** ldd ***'  \
 	    && LD_LIBRARY_PATH=/usr/local/lib:/opt/lib ldd /opt/install/exachem/bin/ExaChem || true \
 	    && dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 100
-ENV	    CUDA_VERSION_MAJOR=11 
-ENV	    CUDA_VERSION_MINOR=7
+ENV	    CUDA_VERSION_MAJOR=12
+ENV	    CUDA_VERSION_MINOR=8
 ENV	    LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/opt/lib \
 	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:/opt/install/exachem/bin:/usr/local/bin
 #clean unnecessary packages
