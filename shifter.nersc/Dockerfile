@@ -41,7 +41,7 @@ WORKDIR     /opt
 ENV	    CUDA_VERSION_MAJOR=12 
 ENV	    CUDA_VERSION_MINOR=8
 ENV         GCC_VERSION=14
-ENV         PY_VERSION=3.11
+ENV         PY_VERSION=3.12
 ENV	    PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:/opt/nwchem/bin:/usr/local/bin \
 	    LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib  
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -72,8 +72,8 @@ cat /opt/ao_strip.sh && \
 	    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
 	    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
 	    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
-	    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 100 \
-	    && update-alternatives --install /usr/bin/python3-config python3-config /usr/bin/python3.11-config 100 \
+	    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python"$PY_VERSION" 100 \
+	    && update-alternatives --install /usr/bin/python3-config python3-config /usr/bin/python"$PY_VERSION"-config 100 \
             && export FETCHED_LIBINT=0 \
 	    && export FETCHED_MPICH=0 \
 	    && if [[ -z "${FC}" ]]; then export FC=gfortran ; fi \
@@ -94,10 +94,10 @@ cat /opt/ao_strip.sh && \
             && echo "FFLAGS_IN is " $FFLAGS_IN 	>& nvcc.out && cat nvcc.out && rm nvcc.out \
 	    && echo GITHUB_REPOSITORY_OWNER is $GITHUB_REPOSITORY_OWNER \
             && if [[ $USE_CPU == N ]]; then echo "cuda install" \
-	    ; wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg \
+	    ; wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-archive-keyring.gpg \
             ; cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg \
-            ; echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list \
-            ;  wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin \
+            ; echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /" |  tee /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list \
+            ;  wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin \
             ; mv cuda-*.pin /etc/apt/preferences.d/cuda-repository-pin-600 \
 	    ; apt-get -q=2 update \
             ; apt-get -q=2 -y install cuda-nvcc-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-cudart-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}  \
