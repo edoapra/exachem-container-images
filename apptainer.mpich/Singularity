@@ -102,14 +102,14 @@ export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
 if [ ${GPU} = "nvidia" ]; then
-export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=4
+export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=8
 echo CUDA $CUDA_VERSION_MAJOR $CUDA_VERSION_MINOR
 fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
 echo GPU is $GPU
-export GCC_VERSION=12
+export GCC_VERSION=14
 
 export PATH=$MPICH_DIR/bin:/opt/intel/oneapi/compiler/latest/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin::/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"$ROCM_PATH"/bin
 export LD_LIBRARY_PATH=$MPICH_DIR/lib:/opt/intel/oneapi/compiler/latest/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:"$ROCM_PATH"/lib:"$ROCM_PATH"/llvm/lib
@@ -552,8 +552,8 @@ fi
 %environment
 export MPICH_DIR=/opt/mpich
 export SINGULARITY_MPICH_DIR=$MPICH_DIR
-export CUDA_VERSION_MAJOR=11 
-export CUDA_VERSION_MINOR=7
+export CUDA_VERSION_MAJOR=12 
+export CUDA_VERSION_MINOR=8
 if [ -f /rocm_version.txt ]; then  export `cat /rocm_version.txt` ; fi
 export PATH=/opt/rocm/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH

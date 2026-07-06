@@ -73,7 +73,7 @@ export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
 if [ ${GPU} = "nvidia" ]; then
-   export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=6
+   export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=8
    export CUDA_ROOT=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"
    export CUDA_INSTALL_PATH=${CUDA_ROOT}
    export CUDA_PATH=${CUDA_ROOT}
@@ -735,7 +735,7 @@ ls -lart  /opt/install/exachem || true
 export MPI_DIR=/opt/mpi
 export SINGULARITY_MPI_DIR=$MPI_DIR
 export CUDA_VERSION_MAJOR=12
-export CUDA_VERSION_MINOR=6
+export CUDA_VERSION_MINOR=8
 export CUDA_ROOT=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"
 export PATH=/geometric/bin:/opt/install/exachem/bin:$MPI_DIR/bin:$CUDA_ROOT/bin:"$ROCM_PATH"/bin/:$PATH
 export LD_LIBRARY_PATH=$MPI_DIR/lib:$CUDA_ROOT/lib64:/usr/local/lib:$MPI_DIR/lib:"$ROCM_PATH"/lib:$LD_LIBRARY_PATH:
