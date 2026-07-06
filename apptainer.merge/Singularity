@@ -82,7 +82,7 @@ export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
 echo GPU is $GPU
-export GCC_VERSION=12
+export GCC_VERSION=14
 export EXACHEM_BRANCH=main
 export TAMM_BRANCH=main
 export DEBIAN_FRONTEND=noninteractive 
