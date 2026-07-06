@@ -72,7 +72,7 @@ jobs:
               folder: apptainer.merge
               scalapack: y
               elpa: y
-            - ompi: 5.0.9
+            - ompi: 5.0.10
               mpi_impl: ompi
               mpich_device: ch4:ofi
               ofi: N
