@@ -150,11 +150,11 @@ jobs:
         rsync -av $GITHUB_WORKSPACE/${{ matrix.folder }}/* ${{ env.gh_folder }}/${{ matrix.folder }}/.
     - name: create sif from docker
       run: |
-        if [  -f ~/cache/ubuntu_jammy.sif ]; then echo "sif found";
-           cp ~/cache/ubuntu_jammy.sif ${{ env.gh_folder }}/${{ matrix.folder }}/.
+        if [  -f ~/cache/ubuntu_noble.sif ]; then echo "sif found";
+           cp ~/cache/ubuntu_noble.sif ${{ env.gh_folder }}/${{ matrix.folder }}/.
         else
            cd ${{ env.gh_folder }}/${{ matrix.folder }} ;\
-        apptainer pull docker://ubuntu:jammy ; \
+        apptainer pull docker://ubuntu:noble ; \
         fi
     - name: copy patch
       run: |
@@ -196,7 +196,7 @@ jobs:
         apptainer exec ${{ env.gh_folder }}/${{ matrix.folder }}/${{ matrix.folder }}.simg ls -l /opt/install/exachem/include || true
         apptainer exec ${{ env.gh_folder }}/${{ matrix.folder }}/${{ matrix.folder }}.simg ls -l /opt/install/exachem || true
         apptainer exec ${{ env.gh_folder }}/${{ matrix.folder }}/${{ matrix.folder }}.simg tar cjf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 /opt/install/exachem/lib/libint2.a  /opt/install/exachem/lib/pkgconfig/libint2.pc
-        cp ubuntu_jammy.sif ~/cache/.
+        cp ubuntu_noble.sif ~/cache/.
         echo "cache stored"
         ls -l ~/cache
     - name: ldd check

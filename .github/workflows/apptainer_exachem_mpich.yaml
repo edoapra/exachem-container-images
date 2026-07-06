@@ -108,7 +108,7 @@ jobs:
               ofi: builtin
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: nvidia_70
               exachem_branch: main
               tamm_branch: main
@@ -120,7 +120,7 @@ jobs:
               ofi: builtin
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: cpu
               exachem_branch: main
               tamm_branch: main
@@ -132,7 +132,7 @@ jobs:
               ofi: builtin
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: cpu
               exachem_branch: main
               tamm_branch: main
@@ -144,7 +144,7 @@ jobs:
               ofi: builtin
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: cpu
               exachem_branch: main
               tamm_branch: main
@@ -156,7 +156,7 @@ jobs:
               ofi: builtin
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: nvidia_70
               exachem_branch: main
               tamm_branch: main
@@ -168,7 +168,7 @@ jobs:
               ofi: builtin
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: nvidia_70
               exachem_branch: main
               tamm_branch: main
@@ -180,7 +180,7 @@ jobs:
               ofi: 1.22.0
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: nvidia_70
               exachem_branch: main
               tamm_branch: main
@@ -192,7 +192,7 @@ jobs:
               ofi: git
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: cpu
               exachem_branch: main
               tamm_branch: main
@@ -204,7 +204,7 @@ jobs:
               ofi: git
               cc: icx
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: cpu
               exachem_branch: main
               tamm_branch: main
@@ -216,7 +216,7 @@ jobs:
               ofi: git
               cc: icx
               ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: jammy
+              ubuntu: noble
               gpu: intel_gpu_pvc
               exachem_branch: main
               tamm_branch: main
