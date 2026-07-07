@@ -185,12 +185,12 @@ fi \
    wget -qO - https://repositories.intel.com/gpu/intel-graphics.key |  gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics.gpg
    echo "UBUNTU_VERSION is " ${UBUNTU_VERSION}
    echo "UBUNTU_CODE is " ${UBUNTU_CODE}
-   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu "${UBUNTU_CODE}"/lts/2350 unified" | \
+   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu "${UBUNTU_CODE}"/lts/2523 unified" | \
     tee /etc/apt/sources.list.d/intel-gpu-${UBUNTU_VERSION}.list
     apt-get update
     apt-get install -y  \
     libigc-dev intel-igc-cm libigdfcl-dev libigfxcmrt-dev level-zero-dev xpu-smi
-    export ONEAPIV=2025.0
+    export ONEAPIV=2025.2
     apt-get install -y intel-oneapi-compiler-fortran-${ONEAPIV} intel-oneapi-mkl-${ONEAPIV} intel-oneapi-compiler-dpcpp-cpp-${ONEAPIV} \
   intel-oneapi-mkl-core-devel-${ONEAPIV}  intel-oneapi-mkl-sycl-devel-${ONEAPIV} \
 intel-oneapi-tbb-devel intel-oneapi-umf
