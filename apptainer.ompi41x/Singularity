@@ -1,5 +1,5 @@
 Bootstrap: localimage
-From: ubuntu_jammy.sif
+From: ubuntu_noble.sif
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 %files
@@ -60,12 +60,12 @@ echo 'GPU=nvidia ' >  gpu.txt  ; fi"
 export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
-if [ ${GPU} = "nvidia" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=4;  fi
+if [ ${GPU} = "nvidia" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=8;  fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
 echo GPU is $GPU
-export GCC_VERSION=12
+export GCC_VERSION=14
 export EXACHEM_BRANCH=main
 export TAMM_BRANCH=main
 
@@ -100,7 +100,6 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && curl -LJO https://github.com/Kitware/CMake/releases/download/v"$CMAKE_VER"/cmake-"$CMAKE_VER"-linux-x86_64.tar.gz && tar xzf cmake-"$CMAKE_VER"-linux-x86_64.tar.gz \
 && export PATH=/cmake-"$CMAKE_VER"-linux-x86_64/bin:$PATH \
 && cmake --version \
-&& apt-get -y install -y  gfortran \
 && pwd \
 && echo '@@ ls -lart ' \
 && ls -lart  \
@@ -114,7 +113,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
  python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
- libhwloc-dev  librte-common-mlx5-22 librte-net-mlx5-22 librte-compress-mlx5-22 librte-crypto-mlx5-22 librte-regex-mlx5-22 librte-vdpa-mlx5-22 \
+ libhwloc-dev  librte-*-mlx5-* \
  pkg-config gawk  software-properties-common linux-headers-generic \
             && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make ssh patch curl rsync wget git file  bzip2 tar gnupg2 cmake \
 && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
@@ -131,7 +130,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; fi " \
 && bash -o  pipefail -c "if [[ $GPU == "amd" ]]; then mkdir --parents --mode=0755 /etc/apt/keyrings \
 && wget --quiet https://repo.radeon.com/rocm/rocm.gpg.key -O - |  gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null \
-&& echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${ROCM_VERSION} jammy main' | tee --append /etc/apt/sources.list.d/rocm.list \
+&& echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${ROCM_VERSION} noble main' | tee --append /etc/apt/sources.list.d/rocm.list \
 && echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' |  tee /etc/apt/preferences.d/rocm-pin-600 \
 && apt-get  update -y &&  apt-get -y install hip-dev hipcc hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib \
 && ls -lrt /opt \
@@ -152,11 +151,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt ; fi "  \
 && export kernelv=$(dpkg-query -W linux-headers-generic|cut -f2 ) \
 && echo kernelv is $kernelv \
-&& export k1=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 1)\
-&& export k2=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 2)\
-&& export k3=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 3)\
-&& export k4=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d '.' -f 4)\
-&&  export ktag=$k1.$k2.$k3-$k4-generic \
+&&  export ktag=$(dpkg-query -s linux-headers-generic|egrep Dep|cut -d " " -f 2 | sed -e s'/linux-headers-//') \
 && echo ktag is $ktag \
 && ls /lib/modules/$ktag  || true \
 && echo 'FC -v ' `$FC -v`  \
@@ -177,8 +172,8 @@ $FC -v \
 && cd knem-$knem \
 && echo 'ktag is $ktag' \
 && ./configure --prefix=$OMPI_DIR --with-linux-build=/lib/modules/$ktag/build --with-linux-release=$ktag \
-&& make -j3 \
-&& make install \
+&&    make install-includeHEADERS \
+&&    make install-pkgconfigDATA   \
 && cd .. \
 && wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz -O - | tar xzf - \
 && cd ucx-$ucx \
@@ -330,8 +325,8 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 %environment
 export OMPI_DIR=/opt/ompi
 export SINGULARITY_OMPI_DIR=$OMPI_DIR
-export CUDA_VERSION_MAJOR=11 
-export CUDA_VERSION_MINOR=7
+export CUDA_VERSION_MAJOR=12 
+export CUDA_VERSION_MINOR=8
 export PATH=/opt/install/exachem/bin:$OMPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:"$ROCM_PATH"/bin/:$PATH
 export LD_LIBRARY_PATH=$OMPI_DIR/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$OMPI_DIR/lib:"$ROCM_PATH"/lib:$LD_LIBRARY_PATH:
 export SINGULARITYENV_APPEND_PATH=/opt/install/exachem/bin:$OMPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:"$ROCM_PATH"/bin

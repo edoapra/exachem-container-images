@@ -36,16 +36,16 @@ jobs:
           elpa:
             - N
           ubuntu:
-            - jammy
+            - noble
           gpu:
             - cpu
             - nvidia_70
             - nvidia_80
             - nvidia_90
-            - amd_gfx908_rocm6.0.3
-            - amd_gfx90a_rocm6.0.3
             - amd_gfx908_rocm6.2.4
             - amd_gfx90a_rocm6.2.4
+            - amd_gfx908_rocm6.4.4
+            - amd_gfx90a_rocm6.4.4
           include:
             - gpu: cpu
               ga_runtime: MPI_RMA
@@ -54,7 +54,7 @@ jobs:
               ofi: N
               exachem_branch: main
               elpa: Y
-              ubuntu: jammy
+              ubuntu: noble
             - gpu: nvidia_70
               ga_runtime: MPI_PROGRESS_RANK
               folder: apptainer.ompi5x
@@ -62,7 +62,7 @@ jobs:
               ofi: 1.22.0
               exachem_branch: main
               elpa: N
-              ubuntu: jammy
+              ubuntu: noble
             - gpu: amd_gfx90a_rocm6.2.4
               ga_runtime: MPI_PROGRESS_RANK
               folder: apptainer.ompi5x
@@ -102,7 +102,7 @@ jobs:
               ofi: N
               exachem_branch: main
               elpa: N
-              ubuntu: jammy
+              ubuntu: noble
             - gpu: nvidia_70
               ga_runtime: MPI_PROGRESS_RANK
               folder: apptainer.ompi5x
@@ -110,7 +110,7 @@ jobs:
               ofi: N
               exachem_branch: main
               elpa: N
-              ubuntu: jammy
+              ubuntu: noble
             - gpu: nvidia_80
               ga_runtime: MPI_PROGRESS_RANK
               folder: apptainer.ompi5x
@@ -118,7 +118,7 @@ jobs:
               ofi: N
               exachem_branch: main
               elpa: N
-              ubuntu: jammy
+              ubuntu: noble
             - gpu: nvidia_90
               ga_runtime: MPI_PROGRESS_RANK
               folder: apptainer.ompi5x
@@ -126,7 +126,7 @@ jobs:
               ofi: N
               exachem_branch: main
               elpa: N
-              ubuntu: jammy
+              ubuntu: noble
     steps:
     - name: Get Instruction
       id: get-simd

@@ -102,14 +102,14 @@ export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
 if [ ${GPU} = "nvidia" ]; then
-export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=4
+export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=8
 echo CUDA $CUDA_VERSION_MAJOR $CUDA_VERSION_MINOR
 fi
 export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
 echo GPU is $GPU
-export GCC_VERSION=12
+export GCC_VERSION=14
 
 export PATH=$MPICH_DIR/bin:/opt/intel/oneapi/compiler/latest/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin::/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"$ROCM_PATH"/bin
 export LD_LIBRARY_PATH=$MPICH_DIR/lib:/opt/intel/oneapi/compiler/latest/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:"$ROCM_PATH"/lib:"$ROCM_PATH"/llvm/lib
@@ -185,12 +185,12 @@ fi \
    wget -qO - https://repositories.intel.com/gpu/intel-graphics.key |  gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics.gpg
    echo "UBUNTU_VERSION is " ${UBUNTU_VERSION}
    echo "UBUNTU_CODE is " ${UBUNTU_CODE}
-   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu "${UBUNTU_CODE}"/lts/2350 unified" | \
+   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu "${UBUNTU_CODE}"/lts/2523 unified" | \
     tee /etc/apt/sources.list.d/intel-gpu-${UBUNTU_VERSION}.list
     apt-get update
     apt-get install -y  \
-    libigc-dev intel-igc-cm libigdfcl-dev libigfxcmrt-dev level-zero-dev xpu-smi
-    export ONEAPIV=2025.0
+    libigc-dev intel-igc-cm libigdfcl-dev libigfxcmrt-dev level-zero-dev xpu-smi intel-opencl-icd libigdgmm12 intel-ocloc
+    export ONEAPIV=2025.2
     apt-get install -y intel-oneapi-compiler-fortran-${ONEAPIV} intel-oneapi-mkl-${ONEAPIV} intel-oneapi-compiler-dpcpp-cpp-${ONEAPIV} \
   intel-oneapi-mkl-core-devel-${ONEAPIV}  intel-oneapi-mkl-sycl-devel-${ONEAPIV} \
 intel-oneapi-tbb-devel intel-oneapi-umf
@@ -211,22 +211,27 @@ intel-oneapi-tbb-devel intel-oneapi-umf
     export CPATH=/opt/intel/oneapi/tbb/latest/include:${CPATH}
     export CMAKE_PREFIX_PATH=/opt/intel/oneapi/tbb/latest/lib/cmake:${CMAKE_PREFIX_PATH}
     export PKG_CONFIG_PATH=/opt/intel/oneapi/tbb/latest/lib/pkgconfig:${PKG_CONFIG_PATH}
+    export PATH=/opt/intel/oneapi/compiler/latest/bin/compiler/:${PATH}
 
     find /opt/intel/oneapi/ -name "*cmake"
+    find /opt/intel/oneapi/ -name "llvm-*"
+    dpkg-query -L intel-opencl-icd
+    which llvm-foreach
+    which ocloc
 # https://github.com/intel/compute-runtime
     mkdir neo && cd neo 
     export IGCV=1.0.17537.20
     wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-core_${IGCV}_amd64.deb
     wget --progress=dot:giga https://github.com/intel/intel-graphics-compiler/releases/download/igc-${IGCV}/intel-igc-opencl_${IGCV}_amd64.deb
-    export CRTV=24.35.30872.22
-    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb
-    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.0_amd64.deb
+#    export CRTV=24.35.30872.22
+#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/intel-opencl-icd_${CRTV}_amd64.deb
+#    wget --progress=dot:giga https://github.com/intel/compute-runtime/releases/download/${CRTV}/libigdgmm12_22.5.0_amd64.deb
     dpkg -i *.deb && cd .. && rm -rf neo
  fi
-if [ $GPU = "nvidia" ]; then  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg ;\
+if [ $GPU = "nvidia" ]; then  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-archive-keyring.gpg ;\
  cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg ;\
- echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /' |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list ;\
-  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin ;\
+ echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /' |  tee /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list ;\
+  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin ;\
  mv cuda-*.pin /etc/apt/preferences.d/cuda-repository-pin-600 ;\
   apt-get  update ;\
 apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; export CUDA_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"; ln -sf $CUDA_PATH/targets/x86_64-linux/lib $CUDA_PATH/targets/x86_64-linux/lib64; echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) ;   echo ls cudapath $(ls -lrt $CUDA_PATH ) || true; echo find libnvidia-ml $(find $CUDA_PATH -name "libnvidia-ml*") || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib/libcublas*)|| true ;   fi  \
@@ -552,8 +557,8 @@ fi
 %environment
 export MPICH_DIR=/opt/mpich
 export SINGULARITY_MPICH_DIR=$MPICH_DIR
-export CUDA_VERSION_MAJOR=11 
-export CUDA_VERSION_MINOR=7
+export CUDA_VERSION_MAJOR=12 
+export CUDA_VERSION_MINOR=8
 if [ -f /rocm_version.txt ]; then  export `cat /rocm_version.txt` ; fi
 export PATH=/opt/rocm/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH

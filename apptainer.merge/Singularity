@@ -73,7 +73,7 @@ export `cat ./gpu.txt`
 export `cat ./rocm_version.txt`
 export `cat ./gpu_arch.txt`
 if [ ${GPU} = "nvidia" ]; then
-   export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=6
+   export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=8
    export CUDA_ROOT=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"
    export CUDA_INSTALL_PATH=${CUDA_ROOT}
    export CUDA_PATH=${CUDA_ROOT}
@@ -82,7 +82,7 @@ export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
 if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
 echo ROCM_PATH is $ROCM_PATH
 echo GPU is $GPU
-export GCC_VERSION=12
+export GCC_VERSION=14
 export EXACHEM_BRANCH=main
 export TAMM_BRANCH=main
 export DEBIAN_FRONTEND=noninteractive 
@@ -268,12 +268,12 @@ apt-get -y install -y coreutils  tar libnl-3-200 libnl-route-3-200 libgomp1 libn
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
  libhwloc-dev  librte-common-mlx5-2* librte-net-mlx5-2* librte-compress-mlx5-2* librte-crypto-mlx5-2* librte-regex-mlx5-2* librte-vdpa-mlx5-2* \
  pkg-config gawk  software-properties-common linux-headers-generic lsb-release  lua5.3
-if [ $ompi_major = '5' ]
-then
-    apt-get -y install -y libpmix-bin libpmix-dev libpmix2
-else
-    apt-get -y install -y libpmi2-0-dev
-fi 
+#if [ $ompi_major = '5' ]
+#then
+#    apt-get -y install -y libpmix-bin libpmix-dev libpmix2
+#else
+#    apt-get -y install -y libpmi2-0-dev
+#fi 
 apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make ssh patch curl rsync wget git file  bzip2 tar gnupg2 cmake 
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100
 update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100
@@ -735,7 +735,7 @@ ls -lart  /opt/install/exachem || true
 export MPI_DIR=/opt/mpi
 export SINGULARITY_MPI_DIR=$MPI_DIR
 export CUDA_VERSION_MAJOR=12
-export CUDA_VERSION_MINOR=6
+export CUDA_VERSION_MINOR=8
 export CUDA_ROOT=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"
 export PATH=/geometric/bin:/opt/install/exachem/bin:$MPI_DIR/bin:$CUDA_ROOT/bin:"$ROCM_PATH"/bin/:$PATH
 export LD_LIBRARY_PATH=$MPI_DIR/lib:$CUDA_ROOT/lib64:/usr/local/lib:$MPI_DIR/lib:"$ROCM_PATH"/lib:$LD_LIBRARY_PATH:

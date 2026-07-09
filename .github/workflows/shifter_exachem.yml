@@ -111,22 +111,22 @@ jobs:
       - name: docker ubuntu tag
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "ubuntu_tag=ubuntu:jammy" >> $GITHUB_ENV
+          echo "ubuntu_tag=ubuntu:noble" >> $GITHUB_ENV
       - name: save docker ubuntu image
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           ubuntu_tag=$(echo ghcr.io/${{ github.repository }}/ubuntu:latest| tr '[:upper:]' '[:lower:]')
           echo "ubuntu_tag=$ubuntu_tag" >> $GITHUB_ENV
-          if [  -f ~/cache/myubuntu_jammy.tar ]; then
+          if [  -f ~/cache/myubuntu_noble.tar ]; then
               echo "docker tar found"
-              docker load -i ~/cache/myubuntu_jammy.tar
+              docker load -i ~/cache/myubuntu_noble.tar
               docker images
           else
               echo "docker tar not found found"
               cd ${{ matrix.folder }}
               docker build -t $ubuntu_tag -f Dockerfile.ubuntu .
               mkdir -p ~/cache
-              docker save -o ~/cache/myubuntu_jammy.tar $ubuntu_tag
+              docker save -o ~/cache/myubuntu_noble.tar $ubuntu_tag
               docker images
           fi
           docker push $ubuntu_tag
