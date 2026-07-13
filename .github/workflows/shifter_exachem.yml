@@ -115,7 +115,7 @@ jobs:
       - name: save docker ubuntu image
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          ubuntu_tag=$(echo ghcr.io/${{ github.repository }}/ubuntu:latest| tr '[:upper:]' '[:lower:]')
+          ubuntu_tag=$(echo ghcr.io/${{ github.repository }}/ubuntu:noble| tr '[:upper:]' '[:lower:]')
           echo "ubuntu_tag=$ubuntu_tag" >> $GITHUB_ENV
           if [  -f ~/cache/myubuntu_noble.tar ]; then
               echo "docker tar found"
