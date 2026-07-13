@@ -1,6 +1,6 @@
 #
 
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 LABEL maintainer="Edoardo Apra <edoardo.apra@pnnl.gov>"
 
