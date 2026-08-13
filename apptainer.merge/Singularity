@@ -592,7 +592,9 @@ echo 'cloning tamm source *** ' || true
 cd /opt || { echo "Failure"; exit 1; } 
 git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem   
 git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git  
-cd TAMM  
+cd TAMM
+ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch 
+patch -p1 < mycmb.patch 
 export NO_STOP_MESSAGE=1
 mkdir build && cd build 
 CMAKE_OPTIONS="-DTAMM_ENABLE_PYTHON=ON -DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  
@@ -677,6 +679,7 @@ echo "$CMAKE_OPTIONS  \\" >> doit.sh ; echo ".. " >>doit.sh
 bash doit.sh || { echo "Cmake failure"; exit 1; } 
 make V=1 VERBOSE=1 -j1 || { echo "Compilation failure"; exit 1; }  
 echo exit code for compilation $?  
+grep -A 30 cublasLtHeuristicsCacheSetCapacity $(find /opt/TAMM/build -name ELPA_External)/config.log ||true
 make install  
 echo exit code for make install $?  
 bash -c "if [[ -f /opt/install/exachem/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi"  
