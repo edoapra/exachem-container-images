@@ -647,6 +647,7 @@ bash doit.sh || { echo "Cmake failure";
 	    cat $(find /opt/TAMM/ -name CMakeOutput.log) || true ; \
             cat $(find /opt/TAMM/ -name CMakeError.log ) || true; exit 1; } 
 make -j3 || { echo "Compilation failure in tamm step";
+     grep -A 30 cublasLtHeuristicsCacheSetCapacity $(find /opt/TAMM/build -name ELPA_External)/config.log ||true
               echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
 	    cat $(find /opt/TAMM/ -name config.log) || true ; \
 	    cat $(find /opt/TAMM/ -name CMakeCache.txt) || true ; \
@@ -679,7 +680,6 @@ echo "$CMAKE_OPTIONS  \\" >> doit.sh ; echo ".. " >>doit.sh
 bash doit.sh || { echo "Cmake failure"; exit 1; } 
 make V=1 VERBOSE=1 -j1 || { echo "Compilation failure"; exit 1; }  
 echo exit code for compilation $?  
-grep -A 30 cublasLtHeuristicsCacheSetCapacity $(find /opt/TAMM/build -name ELPA_External)/config.log ||true
 make install  
 echo exit code for make install $?  
 bash -c "if [[ -f /opt/install/exachem/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi"  
