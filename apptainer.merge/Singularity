@@ -600,9 +600,6 @@ patch -p1 < mycmb.patch
 export NO_STOP_MESSAGE=1
 mkdir build && cd build 
 CMAKE_OPTIONS="-DTAMM_ENABLE_PYTHON=ON -DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  
-if [ ${GPU} != "intel_gpu_pvc" ]; then
-    CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLAS_ARCH=zen3 -DMARCH_FLAGS=-march=znver3"
-fi
 CMAKE_OPTIONS="$CMAKE_OPTIONS -DGCCROOT=/usr" 
 if [ ${CC} = "icx" ]; then
     echo "intel compilers "
@@ -649,8 +646,6 @@ bash doit.sh || { echo "Cmake failure";
 	    cat $(find /opt/TAMM/ -name CMakeOutput.log) || true ; \
             cat $(find /opt/TAMM/ -name CMakeError.log ) || true; exit 1; } 
 make -j3 || { echo "Compilation failure in tamm step";
-     grep -A 30 cublasLtHeuristicsCacheSetCapacity $(find /opt/TAMM/build -name ELPA_External)/config.log ||true
-     tail -500 (find /opt/TAMM/build -name ELPA_External)/config.log ||true
               echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
 	    cat $(find /opt/TAMM/ -name config.log) || true ; \
 	    cat $(find /opt/TAMM/ -name CMakeCache.txt) || true ; \
