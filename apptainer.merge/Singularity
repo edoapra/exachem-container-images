@@ -252,6 +252,7 @@ chmod +x /usr/bin/curl
 echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >  ~/.wgetrc
 echo        "cacert=/etc/ssl/certs/ca-certificates.crt" >> ~/.curlrc
 export CMAKE_VER=3.29.5
+export CMAKE_VER=3.31.11
 curl -LJO https://github.com/Kitware/CMake/releases/download/v"$CMAKE_VER"/cmake-"$CMAKE_VER"-linux-x86_64.tar.gz && tar xzf cmake-"$CMAKE_VER"-linux-x86_64.tar.gz
 export PATH=/cmake-"$CMAKE_VER"-linux-x86_64/bin:$PATH
 apt-get -y install -y  gfortran
@@ -595,11 +596,11 @@ cd /opt || { echo "Failure"; exit 1; }
 git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem   
 git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git  
 cd TAMM
-if [ \( ${GPU} = "nvidia" \) -a \(  ${ELPA} = "y" \) ]; then
-echo 'patching CMakeBuild for CUDA/ELPA'
- wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch
-patch -p1 < mycmb.patch
-fi
+#if [ \( ${GPU} = "nvidia" \) -a \(  ${ELPA} = "y" \) ]; then
+#echo 'patching CMakeBuild for CUDA/ELPA'
+# wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch
+#patch -p1 < mycmb.patch
+#fi
 export NO_STOP_MESSAGE=1
 mkdir build && cd build 
 CMAKE_OPTIONS="-DTAMM_ENABLE_PYTHON=ON -DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  
@@ -672,6 +673,7 @@ CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_BUILD_TYPE=Release "
 if [ ${GPU} = "intel_gpu_pvc" ]; then
     CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_CXX_FLAGS="\"" -mtune=sapphirerapids -ffast-math -fsycl -fsycl-device-code-split=per_kernel -fsycl-targets=intel_gpu_pvc -sycl-std=2020"\"""
 fi
+CMAKE_OPTIONS="$CMAKE_OPTIONS -DDCMSB_TAG=develop"
 export CMAKE_OPTIONS
 echo CMAKE_OPTIONS $CMAKE_OPTIONS  
 rm -f doit.sh
