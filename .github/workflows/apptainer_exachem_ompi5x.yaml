@@ -242,7 +242,7 @@ jobs:
         apptainer exec ${{ matrix.folder }}.simg cp -r /opt/ompi ~/cache
         apptainer exec ${{ matrix.folder }}.simg ls -l /opt/install/exachem/include || true
         apptainer exec ${{ matrix.folder }}.simg ls -l /opt/install/exachem || true
-        apptainer exec ${{ matrix.folder }}.simg tar cjf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 /opt/install/exachem/lib/libint2.a 
+        apptainer exec ${{ matrix.folder }}.simg tar cjf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 /opt/install/exachem/lib/libint2.a  /opt/install/exachem/lib/libeigen_* /opt/install/exachem/share/eigen3/* /opt/install/exachem/include/eigen3/* /opt/install/exachem/share/pkgconfig/eigen3.pc
         cp ubuntu_${{ matrix.ubuntu }}.sif ~/cache/.
         echo "cache stored"
         ls -l ~/cache
