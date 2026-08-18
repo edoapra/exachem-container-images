@@ -323,7 +323,7 @@ if [ $GPU = "amd" ]; then
     echo '$$$$$$$$$$$$$$$$$$$$'
     echo ' ls -l  ROCM_PATH/lib/libamdhip64.so*' $(ls -l $ROCM_PATH/lib/libamdhip64.so*)  
     echo '$$$$$$$$$$$$$$$$$$$$' 
-    wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt
+    #wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt
 fi 
 echo 'FC --version ' `$FC --version` 
 echo 'CC -v ' `$CC -v` 
