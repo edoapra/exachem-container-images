@@ -205,7 +205,11 @@ jobs:
         /usr/bin/lscpu
         curl -LJO https://raw.githubusercontent.com/nwchemgit/nwchem/master/travis/guess_simd.sh
         chmod +x guess_simd.sh
+        curl -LJO https://raw.githubusercontent.com/nwchemgit/nwchem/master/travis/cpuinfo.sh
+        chmod +x cpuinfo.sh
+        ./cpuinfo.sh
         echo "simd=$(./guess_simd.sh)" >> $GITHUB_ENV
+        echo "microarch=$(cat /tmp/microarch_$(id -u).txt)" >> $GITHUB_ENV
     - name: exachem version tag
       run: |
         if [[ ${{ matrix.exachem_branch }} != main ]]; then
@@ -237,7 +241,7 @@ jobs:
         echo "exachemversion=$myversion" >> $GITHUB_ENV
     - name: cache tag
       run: |
-        echo "cache_tag=${{ matrix.mpi_impl }}${{ matrix.ompi }}${{ matrix.mpich }}${{ env.mpich_device }}${{ env.exachemversion}}" >> $GITHUB_ENV
+        echo "cache_tag=${{ matrix.mpi_impl }}${{ matrix.ompi }}${{ matrix.mpich }}${{ env.mpich_device }}${{ env.simd }}${{ env.microarch}}${{ env.exachemversion}}" >> $GITHUB_ENV
     - name: gh actions tag
       run: |
         echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.merge${{ env.cache_tag }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
