@@ -358,6 +358,7 @@ jobs:
         apptainer exec /mnt/tmpdir/exachem.simg cp -r /opt/pmix ~/cache/. || true
         apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/include || true
         apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem || true
+        set -exx
         VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libint2.so.2 |tail |cut -d . -f 5-)
         echo $?
         echo @@@ $VER @@@
@@ -365,8 +366,8 @@ jobs:
         libint_libs="/opt/install/exachem/lib/libint2.so /opt/install/exachem/lib/libint2.so.2 /opt/install/exachem/lib/libint2.so.$VER"
         fi
         echo libint_libs is $libint_libs
+        set +ex
         apptainer exec /mnt/tmpdir/exachem.simg tar -chjvf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 $libint_libs  /opt/install/exachem/lib/libeigen_blas.so /opt/install/exachem/lib/libeigen_blas_static.a /opt/install/exachem/lib/libeigen_lapack.so /opt/install/exachem/lib/libeigen_lapack_static.a /opt/install/exachem/share/eigen3 /opt/install/exachem/include/eigen3 /opt/install/exachem/share/pkgconfig/eigen3.pc
-        /opt/install/exachem/lib/libeigen_blas_static.a
         VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libxc.so |tail |cut -d . -f 4-)
         echo $?
         echo @@@ $VER @@@
