@@ -170,7 +170,7 @@ export MYROOT=/
 && echo cat /etc/apt/sources.list.d/rocm.list \
 && cat /etc/apt/sources.list.d/rocm.list \
 && echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' |  tee /etc/apt/preferences.d/rocm-pin-600 \
-&& apt-get  update -y &&  apt-get -y install hip-dev hipcc hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib rocminfo  hipcc hipblas-dev \
+&& apt-get  update -y &&  apt-get -y install hip-dev hipcc hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib rocminfo  hipcc hipblas-dev rocsolver-dev \
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true \
 && echo "$GPU_ARCH" >> $ROCM_PATH/bin/target.lst \
