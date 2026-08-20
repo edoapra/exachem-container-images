@@ -421,8 +421,9 @@ jobs:
                 attempts+=1
             fi
         done
-        export UCX_TLS=ud,tcp,self
+        export UCX_TLS=tcp,self
         export UCX_POSIX_USE_PROC_LINK=n
+        export OMPI_MCA_osc=^ucx
         export OMPI_MCA_btl_vader_single_copy_mechanism=none
         export OMPI_MCA_smsc=^knem
         export PMIX_MCA_gds=^shmem
