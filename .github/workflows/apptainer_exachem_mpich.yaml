@@ -358,6 +358,7 @@ jobs:
         apptainer exec /mnt/tmpdir/exachem.simg cp -r /opt/pmix ~/cache/. || true
         apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/include || true
         apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem || true
+        set -exx
         VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libint2.so.2 |tail |cut -d . -f 5-)
         echo $?
         echo @@@ $VER @@@
@@ -365,7 +366,8 @@ jobs:
         libint_libs="/opt/install/exachem/lib/libint2.so /opt/install/exachem/lib/libint2.so.2 /opt/install/exachem/lib/libint2.so.$VER"
         fi
         echo libint_libs is $libint_libs
-        apptainer exec /mnt/tmpdir/exachem.simg tar cjvf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 $libint_libs  /opt/install/exachem/lib/pkgconfig/libint2.pc
+        set +ex
+        apptainer exec /mnt/tmpdir/exachem.simg tar -chjvf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 $libint_libs  /opt/install/exachem/lib/libeigen_blas.so /opt/install/exachem/lib/libeigen_blas_static.a /opt/install/exachem/lib/libeigen_lapack.so /opt/install/exachem/lib/libeigen_lapack_static.a /opt/install/exachem/share/eigen3 /opt/install/exachem/include/eigen3 /opt/install/exachem/share/pkgconfig/eigen3.pc
         VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libxc.so |tail |cut -d . -f 4-)
         echo $?
         echo @@@ $VER @@@
@@ -437,6 +439,11 @@ jobs:
         mpirun --version || true
         export UCX_TLS=tcp,self
         export UCX_POSIX_USE_PROC_LINK=n
+        export OMPI_MCA_osc=^ucx
+        export OMPI_MCA_btl_vader_single_copy_mechanism=none
+        export OMPI_MCA_smsc=^knem
+        export PMIX_MCA_gds=^shmem
+        export PMIX_MCA_psec=^munge
         export ASAN_OPTIONS=allocator_may_return_null=1 
         timeout 5m $MPIRUN_PATH -np 2 apptainer exec ${{ env.tag }}:${{ env.date }} \
         /opt/install/exachem/bin/ExaChem \

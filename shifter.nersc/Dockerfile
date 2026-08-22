@@ -166,6 +166,7 @@ cat /opt/ao_strip.sh && \
 	    && echo 'caching libint' \
 	    && cd /opt/install/exachem/ \
 	    && if [[ $FETCHED_LIBINT == 1 ]]; then rm -f /opt/cache/libint.tar.bz2 || true; else tar cjvf /opt/cache/libint.tar.bz2 ./include/libint* ./share/libint* ./lib/pkgconfig/libint*.pc ./lib/cmake/libint* ./lib/libint*  || true ; fi  \
+	    && if [[ $FETCHED_LIBINT == 1 ]]; then rm -f /opt/cache/libint.tar.bz2 || true; else tar -chjvf /opt/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 $libint_libs  /opt/install/exachem/lib/libeigen_blas.so /opt/install/exachem/lib/libeigen_blas_static.a /opt/install/exachem/lib/libeigen_lapack.so /opt/install/exachem/lib/libeigen_lapack_static.a /opt/install/exachem/share/eigen3 /opt/install/exachem/include/eigen3 /opt/install/exachem/share/pkgconfig/eigen3.pc|| true ; fi  \
             && echo 'clean unnecessary source to reduce docker size' \
             && cd /opt && rm -rf exachem \
 	    && cd /usr/local || { echo "Failure"; exit 1; } ; if [[ $FETCHED_MPICH == 1 ]]; then rm -f /opt/cache/mpich.tar.bz2 || true; else tar cjvf /opt/cache/mpich.tar.bz2 lib/* include/* bin/* share/* ||true ; fi\
