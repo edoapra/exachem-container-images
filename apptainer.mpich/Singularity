@@ -10,6 +10,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
 %files
 #myaug.patch /opt/
+specs /opt
 autogen.sh /opt
 install-autotools.sh /opt
 
@@ -176,6 +177,13 @@ fi \
 && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
 && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
 && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
+&& cp /opt/specs /usr/lib/gcc/x86_64-linux-gnu/"$GCC_VERSION"/. \
+&& gcc-"$GCC_VERSION" -march=native -Q --help=target | grep avx512f \
+&& g++-"$GCC_VERSION" -march=native -Q --help=target | grep avx512f \
+&& gfortran-"$GCC_VERSION" -march=native -Q --help=target | grep avx512f \
+&& gcc -march=native -Q --help=target | grep avx512f \
+&& g++ -march=native -Q --help=target | grep avx512f \
+&& gfortran -march=native -Q --help=target | grep avx512f \
             && apt-get install  -q=2 -y  autoconf automake libtool git 
  if [ "$CC" = 'icx' ]; then
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1	
@@ -439,6 +447,9 @@ fi
 &&            cd /opt || { echo "Failure"; exit 1; }  \
 &&              git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem    \
 &&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
+&& echo 'patching CMakeBuild' \
+&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch \
+&& patch -p1 < mycmb.patch \
 && 	     cd TAMM   \
 && export NO_STOP_MESSAGE=1 \
 && 	     mkdir build && cd build  \
