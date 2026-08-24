@@ -131,8 +131,8 @@ jobs:
             - mpich: 4.2.3
               mpi_impl: mpich
               mpich_device: ch4:ucx
-              ofi: builtin
-              ucx: N
+              ofi: N
+              ucx: 1.15.0
               cc: gcc
               ga_runtime: MPI_PROGRESS_RANK
               ubuntu: noble
