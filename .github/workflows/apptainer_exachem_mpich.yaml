@@ -140,30 +140,6 @@ jobs:
               scalapack: y
               elpa: y
             - mpich: 4.2.3
-              mpich_device: ch4:ucx
-              ofi: builtin
-              cc: gcc
-              ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: noble
-              gpu: cpu
-              exachem_branch: main
-              tamm_branch: main
-              folder: apptainer.mpich
-              scalapack: y
-              elpa: y
-            - mpich: 4.2.3
-              mpich_device: ch4:ucx
-              ofi: builtin
-              cc: gcc
-              ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: noble
-              gpu: nvidia_70
-              exachem_branch: main
-              tamm_branch: main
-              folder: apptainer.mpich
-              scalapack: y
-              elpa: y
-            - mpich: 4.2.3
               mpich_device: ch4:ofi
               ofi: builtin
               cc: gcc
@@ -267,11 +243,11 @@ jobs:
         echo "cache_tag=${{ env.tag0 }}${{ env.simd }}${{ env.microarch}}${{ env.exachemversion}}" >> $GITHUB_ENV
     - name: tag
       run: |
-        echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.{{ env.tag0 }}${{ env.exachemversion}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.${{ env.tag0 }}${{ env.exachemversion}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
     - name: echo-tag
       run: |
         echo ' the apptainer tag is ' '${{ env.tag }}'
-        echo ' the cache tag is ' '${{ env.cache }}'
+        echo ' the cache tag is ' '${{ env.cache_tag }}'
     - name: Checkout image source
       uses: actions/checkout@v7
       with:
