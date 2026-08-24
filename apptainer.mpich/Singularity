@@ -447,10 +447,10 @@ fi
 &&            cd /opt || { echo "Failure"; exit 1; }  \
 &&              git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem    \
 &&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
+&& 	     cd TAMM   \
 && echo 'patching CMakeBuild' \
 && wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch \
 && patch -p1 < mycmb.patch \
-&& 	     cd TAMM   \
 && export NO_STOP_MESSAGE=1 \
 && 	     mkdir build && cd build  \
 &&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX="\""/opt/install/exachem"\"" -DMODULES="\""CC"\"""  \
