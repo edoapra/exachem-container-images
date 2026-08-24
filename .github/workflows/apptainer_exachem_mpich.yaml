@@ -261,16 +261,17 @@ jobs:
         echo "exachemversion=$myversion" >> $GITHUB_ENV
     - name: tag0
       run: |
-        echo "tag0=${{ matrix.mpich }}${{ env.mpich_device }}" >> $GITHUB_ENV
+        echo "tag0=mpich${{ matrix.mpich }}${{ env.mpich_device }}" >> $GITHUB_ENV
     - name: cache tag
       run: |
         echo "cache_tag=${{ env.tag0 }}${{ env.simd }}${{ env.microarch}}${{ env.exachemversion}}" >> $GITHUB_ENV
     - name: tag
       run: |
-        echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.mpich${{ env.tag0 }}${{ env.exachemversion}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.{{ env.tag0 }}${{ env.exachemversion}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
     - name: echo-tag
       run: |
         echo ' the apptainer tag is ' '${{ env.tag }}'
+        echo ' the cache tag is ' '${{ env.cache }}'
     - name: Checkout image source
       uses: actions/checkout@v7
       with:
