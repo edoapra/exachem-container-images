@@ -191,11 +191,14 @@ jobs:
       if: ${{ env.push_truefalse == 'true' }}
       run: |
         mkdir -p ~/cache || true
+        set -ex
         cd ${{ env.gh_folder }}/${{ matrix.folder }}
-        ../utils/create_cache.sh ${{ env.gh_folder }}/${{ matrix.folder }}/${{ matrix.folder }}.simg
+        ls -lart
+        $GITHUB_WORKSPACE/${{ matrix.folder }}/../utils/create_cache.sh ${{ env.gh_folder }}/${{ matrix.folder }}/${{ matrix.folder }}.simg
         cp ubuntu_noble.sif ~/cache/.
         echo "cache stored"
         ls -l ~/cache
+        set +ex
     - name: ldd check
       if: ${{ env.push_truefalse == 'true' }}
       run: |

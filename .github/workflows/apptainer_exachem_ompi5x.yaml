@@ -238,11 +238,14 @@ jobs:
       if: ${{ env.push_truefalse == 'true' }}
       run: |
         mkdir -p ~/cache || true
+        set -ex
         cd ${{ matrix.folder }}
-        ../utils/create_cache ${{ matrix.folder }}.simg
+        ls -lrta
+        $GITHUB_WORKSPACE/${{ matrix.folder }}/../utils/create_cache.sh ${{ matrix.folder }}.simg
         cp ubuntu_${{ matrix.ubuntu }}.sif ~/cache/.
         echo "cache stored"
         ls -l ~/cache
+        set +ex
     - name: ldd check
       if: ${{ env.push_truefalse == 'true' }}
       run: |
