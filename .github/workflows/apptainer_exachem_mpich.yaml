@@ -140,30 +140,6 @@ jobs:
               scalapack: y
               elpa: y
             - mpich: 4.2.3
-              mpich_device: ch4:ucx
-              ofi: builtin
-              cc: gcc
-              ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: noble
-              gpu: cpu
-              exachem_branch: main
-              tamm_branch: main
-              folder: apptainer.mpich
-              scalapack: y
-              elpa: y
-            - mpich: 4.2.3
-              mpich_device: ch4:ucx
-              ofi: builtin
-              cc: gcc
-              ga_runtime: MPI_PROGRESS_RANK
-              ubuntu: noble
-              gpu: nvidia_70
-              exachem_branch: main
-              tamm_branch: main
-              folder: apptainer.mpich
-              scalapack: y
-              elpa: y
-            - mpich: 4.2.3
               mpich_device: ch4:ofi
               ofi: builtin
               cc: gcc
@@ -230,7 +206,11 @@ jobs:
         /usr/bin/lscpu
         curl -LJO https://raw.githubusercontent.com/nwchemgit/nwchem/master/travis/guess_simd.sh
         chmod +x guess_simd.sh
+        curl -LJO https://raw.githubusercontent.com/nwchemgit/nwchem/master/travis/cpuinfo.sh
+        chmod +x cpuinfo.sh
+        ./cpuinfo.sh
         echo "simd=$(./guess_simd.sh)" >> $GITHUB_ENV
+        echo "microarch=$(cat /tmp/microarch_$(id -u).txt)" >> $GITHUB_ENV
     - name: exachem version tag
       run: |
         if [[ ${{ matrix.exachem_branch }} != main ]]; then
@@ -255,12 +235,19 @@ jobs:
           myversion+=.libfabric-${{ matrix.ofi }}
         fi
         echo "exachemversion=$myversion" >> $GITHUB_ENV
+    - name: tag0
+      run: |
+        echo "tag0=mpich${{ matrix.mpich }}${{ env.mpich_device }}" >> $GITHUB_ENV
+    - name: cache tag
+      run: |
+        echo "cache_tag=${{ env.tag0 }}${{ env.simd }}${{ env.microarch}}${{ env.exachemversion}}" >> $GITHUB_ENV
     - name: tag
       run: |
-        echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.mpich${{ matrix.mpich }}${{ env.mpich_device }}${{ env.exachemversion}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        echo "tag=$(echo oras://ghcr.io/${{ github.repository }}/apptainer.${{ env.tag0 }}${{ env.exachemversion}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
     - name: echo-tag
       run: |
         echo ' the apptainer tag is ' '${{ env.tag }}'
+        echo ' the cache tag is ' '${{ env.cache_tag }}'
     - name: Checkout image source
       uses: actions/checkout@v7
       with:
@@ -273,7 +260,7 @@ jobs:
       with:
         path: |
           ~/cache
-        key: ${{ matrix.folder}}-${{ env.exachemversion}}-${{ matrix.mpich }}${{ matrix.ofi }}${{ env.mpich_device }}${{ env.simd }}-exachemcache-v002
+        key: "${{ env.cache_tag }}"
     - name: fetch cache
       if: steps.setup-cache.outputs.cache-hit == 'true'
       run: |
@@ -354,38 +341,7 @@ jobs:
       run: |
         mkdir -p ~/cache || true
         cd ${{ matrix.folder }}
-        apptainer exec /mnt/tmpdir/exachem.simg cp -r /opt/mpich ~/cache
-        apptainer exec /mnt/tmpdir/exachem.simg cp -r /opt/pmix ~/cache/. || true
-        apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/include || true
-        apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem || true
-        set -exx
-        VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libint2.so.2 |tail |cut -d . -f 5-)
-        echo $?
-        echo @@@ $VER @@@
-        if [  -z $VER ] ; then libint_libs=" /opt/install/exachem/lib/libint2.a"  ; else \
-        libint_libs="/opt/install/exachem/lib/libint2.so /opt/install/exachem/lib/libint2.so.2 /opt/install/exachem/lib/libint2.so.$VER"
-        fi
-        echo libint_libs is $libint_libs
-        set +ex
-        apptainer exec /mnt/tmpdir/exachem.simg tar -chjvf ~/cache/libint.tar.bz2 /opt/install/exachem/include/libint2/  /opt/install/exachem/include/libint2.hpp /opt/install/exachem/include/libint2.h  /opt/install/exachem/share/libint /opt/install/exachem/lib/cmake/libint2 $libint_libs  /opt/install/exachem/lib/libeigen_blas.so /opt/install/exachem/lib/libeigen_blas_static.a /opt/install/exachem/lib/libeigen_lapack.so /opt/install/exachem/lib/libeigen_lapack_static.a /opt/install/exachem/share/eigen3 /opt/install/exachem/include/eigen3 /opt/install/exachem/share/pkgconfig/eigen3.pc
-        VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libxc.so |tail |cut -d . -f 4-)
-        echo $?
-        echo @@@ $VER @@@
-        if [  -z $VER ] ; then libxc_libs=" /opt/install/exachem/lib/libxc.a"  ; else \
-        libxc_libs="/opt/install/exachem/lib/libxc.so /opt/install/exachem/lib/libxc.so.$VER"
-        fi
-        echo libxc_libs is $libxc_libs
-        apptainer exec /mnt/tmpdir/exachem.simg tar cjvf ~/cache/libxc.tar.bz2  $libxc_libs  /opt/install/exachem/lib/pkgconfig/libxc.pc /opt/install/exachem/lib/cmake/Libxc /opt/install/exachem/bin/xc-info \
-        /opt/install/exachem/include/xc.h /opt/install/exachem/include/xc_funcs.h /opt/install/exachem/include/xc_funcs_removed.h /opt/install/exachem/include/xc_funcs_worker.h /opt/install/exachem/include/xc_version.h
-        ELPA_VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls /opt/install/exachem/include/ 2> /dev/null|grep elpa|tail -1 |cut -d - -f 2)
-        if [ ! -z $ELPA_VER ] ; then \
-        libelpa_libs=/opt/install/exachem/lib/libelpa.a
-        VER=$(apptainer exec /mnt/tmpdir/exachem.simg ls -l /opt/install/exachem/lib/libelpa.so |tail |cut -d . -f 4-)
-        VER2=$(echo $VER |cut -d . -f 1)
-        if [ ! -z $VER ]; then libelpa_libs="$libelpa_libs /opt/install/exachem/lib/libelpa.so /opt/install/exachem/lib/libelpa.so.$VER /opt/install/exachem/lib/libelpa.so.$VER2"; fi
-        echo libelpa_libs $libelpa_libs
-        apptainer exec /mnt/tmpdir/exachem.simg tar cjvf ~/cache/libelpa.tar.bz2  /opt/install/exachem/include/elpa-$ELPA_VER /opt/install/exachem/lib/pkgconfig/elpa.pc $libelpa_libs
-        fi
+        ../utils/create_cache.sh /mnt/tmpdir/exachem.simg
         cp ubuntu_${{ matrix.ubuntu }}.sif ~/cache/.
         echo "cache stored"
         ls -l ~/cache

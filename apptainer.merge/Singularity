@@ -7,6 +7,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
    UBUNTU_VERSION=jammy
 
 %files
+specs /opt
 autogen.sh /opt
 install-autotools.sh /opt
 autoconf-2.69.tar.gz /opt
@@ -17,6 +18,7 @@ config.sub           /opt
 config.guess         /opt
 maxsteps.patch       /opt
 #exachem_ecpint.patch /opt/
+
 
 %setup
     #!/bin/bash
@@ -281,6 +283,13 @@ apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_V
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100
 update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100
 update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100
+cp /opt/specs /usr/lib/gcc/x86_64-linux-gnu/"$GCC_VERSION"/.
+gcc-"$GCC_VERSION" -march=native -Q --help=target | grep avx512f
+g++-"$GCC_VERSION" -march=native -Q --help=target | grep avx512f
+gfortran-"$GCC_VERSION" -march=native -Q --help=target | grep avx512f
+gcc -march=native -Q --help=target | grep avx512f
+g++ -march=native -Q --help=target | grep avx512f
+gfortran -march=native -Q --help=target | grep avx512f
 apt-get install  -q=2 -y  autoconf automake libtool git
  export UBUNTU_CODE=$(lsb_release -c |cut -d : -f 2 | sed 's/\t//') 
  echo UBUNTU_CODE is $UBUNTU_CODE 
@@ -597,9 +606,9 @@ git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.g
 git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git  
 cd TAMM
 #if [ \( ${GPU} = "nvidia" \) -a \(  ${ELPA} = "y" \) ]; then
-#echo 'patching CMakeBuild for CUDA/ELPA'
-# wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch
-#patch -p1 < mycmb.patch
+echo 'patching CMakeBuild'
+ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullmay/apptainer.mpich/mycmb.patch
+patch -p1 < mycmb.patch
 #fi
 export NO_STOP_MESSAGE=1
 mkdir build && cd build 
