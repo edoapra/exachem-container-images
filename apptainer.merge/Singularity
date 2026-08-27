@@ -60,7 +60,7 @@ maxsteps.patch       /opt
     bash -c "if [[  -f ${CACHEDIR}/libint.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libint.tar.bz2; echo libint cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libxc.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libxc.tar.bz2; echo libxc cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libelpa.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libelpa.tar.bz2; echo libelpa cache fetched ;fi"
-    bash -c "if [[  -f ${CACHELIBINTDIR}/libint-2.13.1.tar.xz ]]; then cd ${SINGULARITY_ROOTFS}/ ; cp ${CACHELIBINTDIR}/libint-2.13.1.tar.xz /opt/.; echo libint tar cache fetched ;fi"
+    bash -c "if [[  -f ${CACHELIBINTDIR}/libint-2.13.1.tar.xz ]]; then cp ${CACHELIBINTDIR}/libint-2.13.1.tar.xz ${SINGULARITY_ROOTFS}/opt/.; echo libint tar cache fetched ;fi"
     ls -lrta ${SINGULARITY_ROOTFS}/opt  ||true
 
 %post 
