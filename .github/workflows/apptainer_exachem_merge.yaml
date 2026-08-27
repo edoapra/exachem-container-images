@@ -270,15 +270,16 @@ jobs:
         if [  -f ~/cache_libint/libint-2.13.1.tar.xz ]; then echo "libint tar found" ; \
            cp ~/cache_libint/libint-2.13.1.tar.xz ${{ matrix.folder }}/.
         else
-           cd ${{ matrix.folder }} ;\
+           mkdir -p ~/cache_libint
+           cd ~/cache_libint ;\
            wget https://github.com/ExaChem/exachem-support/raw/refs/heads/main/libint/libint-2.13.1.tar.xz ; \
         fi
     - name: fetch cache
-      if: steps.setup-libinttar-cache.outputs.cache-hit == 'true'
       run: |
-        ls -lart ~/cache
-        if [[ -f ~/cache/libint-2.13.1.tar.xz ]]; then \
-        echo "libint tar cache present" ; \
+        ls -lart ~/cache_libint || true
+        if [[ -f ~/cache_libint/libint-2.13.1.tar.xz ]]; then echo  "libint tar cache present"
+        else
+          echo "libint tar not found"
         fi
     - name: Setup cache
       id: setup-cache
@@ -375,7 +376,7 @@ jobs:
         cd ${{ matrix.folder }}
         ../utils/create_cache.sh /mnt/tmpdir/exachem.simg
         cp ubuntu_${{ matrix.ubuntu }}.sif ~/cache/.
-        cp libint-2.13.1.tar.xz ~/cache_libint
+        #cp /opt/libint-2.13.1.tar.xz ~/cache_libint
         echo "cache stored"
         ls -l ~/cache
         ls -l ~/cache_libint
