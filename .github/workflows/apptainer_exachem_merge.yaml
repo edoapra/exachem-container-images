@@ -258,6 +258,40 @@ jobs:
         clean: false
     - name: pkg cleanup
       uses: edoapra/ubuntu-pkg-cleanup@main
+    - name: Setup libint source cache
+      id: setup-libinttar-cache
+      uses: actions/cache@v6
+      with:
+        path: |
+          ~/cache_libint
+        key: libint_2131
+    - name: create source tar caches
+      run: |
+        if [  -f ~/cache_libint/libint-2.13.1.tar.xz ]; then echo "libint source tar found" ; \
+           cp ~/cache_libint/libint-2.13.1.tar.xz ${{ matrix.folder }}/.
+        else
+           mkdir -p ~/cache_libint
+           cd ~/cache_libint ;\
+           wget https://github.com/ExaChem/exachem-support/raw/refs/heads/main/libint/libint-2.13.1.tar.xz ; \
+        fi
+        if [  -f ~/cache_libint/elpa-2026.02.002.tar.gz ]; then echo "elpa source tar found" ; \
+           cp ~/cache_libint/elpa-2026.02.002.tar.gz ${{ matrix.folder }}/.
+        else
+           mkdir -p ~/cache_libint
+           cd ~/cache_libint ;\
+           wget --connect-timeout=55 --tries=3 --waitretry=15 https://elpa.mpcdf.mpg.de/software/tarball-archive/Releases/2026.02.002/elpa-2026.02.002.tar.gz ; \
+        fi
+    - name: check source caches
+      run: |
+        ls -lart ~/cache_libint || true
+        if [[ -f ~/cache_libint/libint-2.13.1.tar.xz ]]; then echo  "libint source tar cache present"
+        else
+          echo "libint source tar not found"
+        fi
+        if [[ -f ~/cache_libint/elpa-2026.02.002.tar.gz ]]; then echo  "elpa source tar cache present"
+        else
+          echo "elpa source tar not found"
+        fi
     - name: Setup cache
       id: setup-cache
       uses: actions/cache@v6
@@ -353,8 +387,10 @@ jobs:
         cd ${{ matrix.folder }}
         ../utils/create_cache.sh /mnt/tmpdir/exachem.simg
         cp ubuntu_${{ matrix.ubuntu }}.sif ~/cache/.
+        #cp /opt/libint-2.13.1.tar.xz ~/cache_libint
         echo "cache stored"
         ls -l ~/cache
+        ls -l ~/cache_libint
     - name: ldd check
       if: ${{ env.push_truefalse == 'true' }}
       run: |

@@ -26,8 +26,10 @@ maxsteps.patch       /opt
     env|egrep SHELL
     ls -la  ${GITHUB_WORKSPACE}
     export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache
+    export CACHELIBINTDIR=${GITHUB_WORKSPACE}/../../../cache_libint
     echo 'ls on ../../../' $(ls -art ${GITHUB_WORKSPACE}/../../../ )
     echo 'ls on CACHEDIR' $(ls -art $CACHEDIR)
+    echo 'ls on CACHELIBINTDIR' $(ls -art $CACHELIBINTDIR)
 #    echo '@@@ ls -l $SINGULARITY_ROOTFS'
 #    ls -l ${SINGULARITY_ROOTFS}
     rm -f ${SINGULARITY_ROOTFS}/*.txt || true
@@ -58,6 +60,8 @@ maxsteps.patch       /opt
     bash -c "if [[  -f ${CACHEDIR}/libint.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libint.tar.bz2; echo libint cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libxc.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libxc.tar.bz2; echo libxc cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libelpa.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libelpa.tar.bz2; echo libelpa cache fetched ;fi"
+    bash -c "if [[  -f ${CACHELIBINTDIR}/libint-2.13.1.tar.xz ]]; then cp ${CACHELIBINTDIR}/libint-2.13.1.tar.xz ${SINGULARITY_ROOTFS}/opt/.; echo libint source tar cache fetched ;fi"
+    bash -c "if [[  -f ${CACHELIBINTDIR}/elpa-2026.02.002.tar.gz ]]; then cp ${CACHELIBINTDIR}/elpa-2026.02.002.tar.gz ${SINGULARITY_ROOTFS}/opt/.; echo elpa source tar cache fetched ;fi"
     ls -lrta ${SINGULARITY_ROOTFS}/opt  ||true
 
 %post 
@@ -400,7 +404,7 @@ if [ $UCX != "N" ]; then
 	if [ ! -f $MPI_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi 
 	cd $ORGPWD
     else
-	echo "using UCX cached installtation"
+	echo "using UCX cached installation"
     fi
     echo ' check ucx' 
     if [ ! -f $MPI_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi 
@@ -683,6 +687,9 @@ if [ ${GPU} = "intel_gpu_pvc" ]; then
     CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_CXX_FLAGS="\"" -mtune=sapphirerapids -ffast-math -fsycl -fsycl-device-code-split=per_kernel -fsycl-targets=intel_gpu_pvc -sycl-std=2020"\"""
 fi
 #CMAKE_OPTIONS="$CMAKE_OPTIONS -DDCMSB_TAG=develop"
+#cache libint tar source
+CMAKE_OPTIONS="$CMAKE_OPTIONS -DLIBINT_TAR_URL=/opt/libint-2.13.1.tar.xz"
+CMAKE_OPTIONS="$CMAKE_OPTIONS -DELPA_URL=/opt/elpa-2026.02.002.tar.gz"
 export CMAKE_OPTIONS
 echo CMAKE_OPTIONS $CMAKE_OPTIONS  
 rm -f doit.sh
