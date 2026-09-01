@@ -20,6 +20,7 @@ install-autotools.sh /opt
     env|egrep SHELL
     ls -la  ${GITHUB_WORKSPACE}
     if [ -d ${GITHUB_WORKSPACE}/../../../cache ]; then export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache; else  export CACHEDIR=$(pwd)/cache; fi
+    export CACHELIBINTDIR=${GITHUB_WORKSPACE}/../../../cache_libint
     rm -f ${SINGULARITY_ROOTFS}/*.txt || true
     bash -c "if [[ -z '${GPU}' ]]; then echo 'GPU=nvidia ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; else echo 'GPU is ${GPU}'; echo 'GPU=${GPU} ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; fi"
     bash -c "if [[ -z '${CC}' ]]; then echo 'CC=gcc ' >> ${SINGULARITY_ROOTFS}/cc.txt ; else echo 'CC is ${CC}'; echo 'CC=${CC} ' >> ${SINGULARITY_ROOTFS}/cc.txt ; fi"
