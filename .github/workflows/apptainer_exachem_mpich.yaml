@@ -15,6 +15,8 @@ on:
   workflow_dispatch:
 
 jobs:
+  build_source_caches:
+    uses: edoapra/exachem-container-images/.github/workflows/create_source_caches.yaml@march2026
   build_image:
     runs-on: ubuntu-24.04
     permissions:
