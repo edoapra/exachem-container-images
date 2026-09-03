@@ -1,13 +1,13 @@
 name: create_source_caches
 
 on:
-  push:
   schedule:
     - cron: '0 0 * * SUN'
   pull_request:
   repository_dispatch:
     types: [backend_automation]
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   create_cache:
