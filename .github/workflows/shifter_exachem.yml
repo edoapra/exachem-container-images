@@ -116,6 +116,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: create cache dirs
+        run: |
+          cd ${{ matrix.folder }}
+          mkdir -p cache cache_libint
       - name: fetch cache
         if: (steps.setup-cache.outputs.cache-hit == 'true')
         run: |
