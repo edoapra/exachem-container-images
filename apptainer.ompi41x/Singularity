@@ -247,7 +247,7 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
 && CMAKE_OPTIONS="$CMAKE_OPTIONS -DLIBINT_URL=/opt/libint-2.13.1.tar.xz" \
 && CMAKE_OPTIONS="$CMAKE_OPTIONS -DELPA_URL=/opt/elpa-2026.02.002.tar.gz" \
-&& CMAKE_OPTIONS="$CMAKE_OPTIONS -DEIGEN_URL=/opt/eigen_master.tar.gz" \
+&& CMAKE_OPTIONS="$CMAKE_OPTIONS -DEIGEN_URL=/opt/eigen.tar.gz" \
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 && 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
