@@ -13,6 +13,7 @@ jobs:
   build_source_caches:
     uses: ./.github/workflows/create_source_caches.yaml
   shifter_job:
+    needs: [build_source_caches]
     permissions:
       contents: read
       packages: write
@@ -66,7 +67,7 @@ jobs:
           else
           echo "elpa source tar not found"
           fi
-          if [[ -f ~/cache_libint/eigen_master.tar.gz ]]; then echo  "eigen source tar cache present"
+          if [[ -f ~/cache_libint/eigen.tar.gz ]]; then echo  "eigen source tar cache present"
           else
           echo "eigen source tar not found"
           fi
@@ -115,6 +116,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: create cache dirs
+        run: |
+          cd ${{ matrix.folder }}
+          mkdir -p cache cache_libint
       - name: fetch cache
         if: (steps.setup-cache.outputs.cache-hit == 'true')
         run: |
